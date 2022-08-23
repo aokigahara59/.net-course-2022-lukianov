@@ -2,29 +2,13 @@
 
 namespace PracticeWithTypes
 {
-    internal class Program
+    public class PracticeWithType
     {
 
-        static void Main(string[] args)
-        {
-            Employee employee = new Employee { name = "Григорий", lastName = "Пихта"};
-            employee.contract = updateContract(employee);
-            //wrongUpatecontract(employee);
-            Console.WriteLine(employee.contract);
-            
-
-
-            Currency currency = new Currency { name = "USD", id = 1};
-            //wrondChangeCurrency(currency);
-            currency = changeCurrency(currency);
-            Console.WriteLine(currency.name + " " + currency.id);
-            Console.ReadLine();
-        }
-
-
+ 
 
         // Неправильный метод обновления служащего
-        public static void wrongUpatecontract(Employee employee)
+        public static void wrongUpateContract(Employee employee)
         {
             employee.contract = $"Сотрудник {employee.name} {employee.lastName} был принят на работу на следующие 3 года.";
         }
