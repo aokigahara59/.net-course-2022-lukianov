@@ -32,7 +32,7 @@ namespace PracticeWithTypes
         // Правильный метод обновления служащего
         public static string updateContract(Employee employee)
         {
-            return $"Сотрудник {employee.name}, {employee.lastName} был принят на работу на следующие 3 года.";
+            return $"Сотрудник {employee.name} {employee.lastName} был принят на работу на следующие 3 года.";
         }
 
 
