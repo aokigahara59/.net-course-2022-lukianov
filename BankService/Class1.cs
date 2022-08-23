@@ -19,7 +19,7 @@ namespace BankService
         {
             Employee employee = new Employee { name = client.name,
             lastName = client.lastName, birthday = client.birthday, passport_id = client.passport_id};
-            employee.contract = PracticeWithType.updateContract(employee);
+            employee.contract = PracticeWithTypesMethods.updateContract(employee);
             return employee;
         }
 

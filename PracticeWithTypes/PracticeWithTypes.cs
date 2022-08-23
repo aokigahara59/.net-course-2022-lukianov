@@ -2,10 +2,13 @@
 
 namespace PracticeWithTypes
 {
-    public class PracticeWithType
+    public class PracticeWithTypesMethods
     {
 
- 
+        static void Main(string[] args)
+        {
+
+        }
 
         // Неправильный метод обновления служащего
         public static void wrongUpateContract(Employee employee)

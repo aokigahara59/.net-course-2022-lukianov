@@ -8,7 +8,7 @@ namespace main
         static void Main(string[] args)
         {
             Employee employee = new Employee { name = "Григорий", lastName = "Пихта" };
-            employee.contract = PracticeWithType.updateContract(employee);
+            employee.contract = PracticeWithTypesMethods.updateContract(employee);
             //wrongUpatecontract(employee);
             Console.WriteLine(employee.contract);
 
@@ -24,7 +24,7 @@ namespace main
 
             Currency currency = new Currency { name = "USD", id = 1 };
             //wrondChangeCurrency(currency);
-            currency = PracticeWithType.changeCurrency(currency);
+            currency = PracticeWithTypesMethods.changeCurrency(currency);
             Console.WriteLine(currency.name + " " + currency.id);
             Console.ReadLine();
 
