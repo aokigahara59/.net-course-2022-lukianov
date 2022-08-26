@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\PracticeWithTypes\PracticeWithTypes.csproj" />
   </ItemGroup>
 
 </Project>

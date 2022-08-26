@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BankService\BankService.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

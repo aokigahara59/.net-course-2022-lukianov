@@ -2,16 +2,16 @@
 {
     public class Person
     {
-        public string name { get; set; }
-        public string lastName { get; set; }
-        public int passport_id { get; set; }
-        public DateTime birthday { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public int Passport_id { get; set; }
+        public DateTime Birthday { get; set; }
 
     }
 
     public class Employee : Person
     {
-        public string contract { get; set; }
+        public string Contract { get; set; }
     }
 
     public class Client : Person
@@ -22,8 +22,8 @@
 
     public struct Currency
     {
-        public string name { get; set; }
-        public int id { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
 
     }
 }

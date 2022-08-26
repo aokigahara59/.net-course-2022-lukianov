@@ -1,25 +1,30 @@
 ﻿using Models;
-using PracticeWithTypes;
 
 namespace BankService
 {
     public class BankService
     {
 
-        public int salaryCalculationForOwner()
+        public int SalaryCalculationForOwner()
         {
-            int bankProfit = 1000000;
-            int expenses = 730000;
-            int ownersCount = 5;
-            return (bankProfit - expenses) / ownersCount;
+            int BankProfit = 1000000;
+            int Expenses = 730000;
+            int OwnersCount = 5;
+            return (BankProfit - Expenses) / OwnersCount;
         }
 
 
-        public Employee turnClientOntoEmployee(Client client)
+        public Employee ConvertClientInEmployee(Client client)
         {
-            Employee employee = new Employee { name = client.name,
-            lastName = client.lastName, birthday = client.birthday, passport_id = client.passport_id};
-            employee.contract = PracticeWithTypesMethods.updateContract(employee);
+            Employee employee = new Employee
+            {
+                Name = client.Name,
+                LastName = client.LastName,
+                Birthday = client.Birthday,
+                Passport_id = client.Passport_id
+            };
+
+           
             return employee;
         }
 
