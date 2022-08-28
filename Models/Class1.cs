@@ -4,7 +4,7 @@
     {
         public string Name { get; set; }
         public string LastName { get; set; }
-        public int Passport_id { get; set; }
+        public int PassportId { get; set; }
         public DateTime Birthday { get; set; }
 
     }
@@ -23,7 +23,6 @@
     public struct Currency
     {
         public string Name { get; set; }
-        public int Id { get; set; }
-
+        public int Code { get; set; }
     }
 }

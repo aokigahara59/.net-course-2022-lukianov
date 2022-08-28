@@ -5,27 +5,21 @@ namespace BankService
     public class BankService
     {
 
-        public int SalaryCalculationForOwner()
+        public float SalaryCalculationForOwner(float BankProfit, float Expenses, int OwnersCount)
         {
-            int BankProfit = 1000000;
-            int Expenses = 730000;
-            int OwnersCount = 5;
-            return (BankProfit - Expenses) / OwnersCount;
+            return (BankProfit - Expenses) / (float)OwnersCount;
         }
 
 
         public Employee ConvertClientInEmployee(Client client)
         {
-            Employee employee = new Employee
+            return new Employee
             {
                 Name = client.Name,
                 LastName = client.LastName,
                 Birthday = client.Birthday,
-                Passport_id = client.Passport_id
+                PassportId = client.PassportId
             };
-
-           
-            return employee;
         }
 
     }
