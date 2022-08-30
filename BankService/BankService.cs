@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace BankService
+namespace Services
 {
     public class BankService
     {
