@@ -9,38 +9,27 @@ using Bogus;
 namespace Services
 {
     public class TestDataGenerator
-    {
+    {       
+        private Faker<Client> _сlientFaker = new Faker<Client>()
+                    .RuleFor(x => x.Name, x => x.Person.FirstName)
+                    .RuleFor(x => x.LastName, x => x.Person.LastName)
+                    .RuleFor(x => x.PassportId, x => x.UniqueIndex)
+                    .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
+                    .RuleFor(x => x.PhoneNumber, x => x.Person.Phone);
+
+
 
         public List<Client> GenerateTestClientsList()
         {
-            var clients = new List<Client>();
-            Random random = new Random();
-            Bogus.Faker faker = new Bogus.Faker();
-            for (int i = 0; i < 1000; i++)
-            {
-                clients.Add(new Client
-                {
-                    Name = faker.Name.FirstName(),
-                    Birthday = new DateTime(random.Next(20, 100)),
-                    PhoneNumber = i
-                });
-            }
-            return clients;
+            return _сlientFaker.Generate(1000);
         }
 
-        public Dictionary<int, Client> GenerateTestClientsDictionary()
+        public Dictionary<string, Client> GenerateTestClientsDictionary()
         {
-            var clients = new Dictionary<int, Client>();
-            Random random = new Random();
-            Bogus.Faker faker = new Bogus.Faker();
+            var clients = new Dictionary<string, Client>();         
             for (int i = 0; i < 1000; i++)
             {
-                Client client = new Client
-                {
-                    Name = faker.Name.FirstName(),
-                    Birthday = new DateTime(random.Next(20, 100)),
-                    PhoneNumber = i
-                };
+                var client = _сlientFaker.Generate();              
                 clients.Add(client.PhoneNumber, client);
             }
             return clients;
@@ -50,16 +39,17 @@ namespace Services
         public List<Employee> GenerateTestEmployeeList()
         {
             var employees = new List<Employee>();
-            Bogus.Faker faker = new Bogus.Faker();
+            Faker<Employee> employeeFaker = new Faker<Employee>()
+                    .RuleFor(x => x.Name, x => x.Person.FirstName)
+                    .RuleFor(x => x.LastName, x => x.Person.LastName)
+                    .RuleFor(x => x.PassportId, x => x.UniqueIndex)
+                    .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth);
             for (int i = 0; i < 1000; i++)
             {
-                employees.Add(new Employee
-                {
-                    Name = faker.Name.FirstName(),
-                    Salary = 10000-i,
-                });
+                var employee = employeeFaker.Generate();
+                employee.Salary = 10000 - i;
+                employees.Add(employee);             
             }
-
             return employees;
         }
     }
