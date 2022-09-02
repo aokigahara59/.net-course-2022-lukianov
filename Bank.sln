@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PracticeWithTypes", "Practi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "BankService\Services.csproj", "{AA939590-F1AF-4957-98AD-FED0132D3343}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Tests", "Service.Tests\Service.Tests.csproj", "{4BB0383F-E249-4B05-B162-167536AACA19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,14 @@ Global
 		{AA939590-F1AF-4957-98AD-FED0132D3343}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA939590-F1AF-4957-98AD-FED0132D3343}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA939590-F1AF-4957-98AD-FED0132D3343}.Release|x86.Build.0 = Release|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Debug|x86.Build.0 = Debug|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Release|x86.ActiveCfg = Release|Any CPU
+		{4BB0383F-E249-4B05-B162-167536AACA19}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +65,7 @@ Global
 		{0D8054F6-92DA-4037-B597-C2BFF882B149} = {2DAB60D7-5A6B-4CEC-A89D-2D0EA563B334}
 		{083FCE50-A388-4CC5-A42D-321B0BF1629C} = {BCDD88E8-992E-4798-A26E-12FB1F55E5A5}
 		{AA939590-F1AF-4957-98AD-FED0132D3343} = {2DAB60D7-5A6B-4CEC-A89D-2D0EA563B334}
+		{4BB0383F-E249-4B05-B162-167536AACA19} = {2DAB60D7-5A6B-4CEC-A89D-2D0EA563B334}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0097849E-39FC-49C1-B05C-98D472240A58}
