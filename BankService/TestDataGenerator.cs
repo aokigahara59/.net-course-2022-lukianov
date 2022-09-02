@@ -52,5 +52,24 @@ namespace Services
             }
             return employees;
         }
+
+
+        public Dictionary<Client, Account> GenerateClientAccountDictionary()
+        {
+            Dictionary<Client, Account> accountDictionary = new Dictionary<Client, Account>();
+            Random random = new Random();
+            Currency currency = new Currency
+            {
+                Name = "USD",
+                Code = 840
+            };
+
+            for (int i = 0; i < 1000; i++)
+            {
+                accountDictionary.Add(_сlientFaker.Generate(),
+                    new Account { Currency = currency, Amount = random.Next(100, 10000) });
+            }
+            return accountDictionary;
+        }
     }
 }
