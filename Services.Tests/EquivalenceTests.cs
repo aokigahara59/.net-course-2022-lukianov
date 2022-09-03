@@ -24,13 +24,10 @@ namespace Service.Tests
             };
 
             // Act
-            bool indicator = false;
-
             Account account = accountDictionary[newClient].Last();           
-            if (account != null) indicator = true;
 
             // Assert
-            Assert.True(indicator);
+            Assert.NotNull(account);
         }
 
         [Fact]
@@ -49,12 +46,8 @@ namespace Service.Tests
                 Salary = employeeInList.Salary
             };
 
-            // Act
-            bool indicator = false;
-            if (employeeList.Contains(employee)) indicator = true;
-
             // Assert
-            Assert.True(indicator);
+            Assert.Contains(employee, employeeList);
         }
     }
 }
