@@ -38,19 +38,35 @@ namespace Services
 
         public List<Employee> GenerateTestEmployeeList()
         {
-            var employees = new List<Employee>();
             Faker<Employee> employeeFaker = new Faker<Employee>()
                     .RuleFor(x => x.Name, x => x.Person.FirstName)
                     .RuleFor(x => x.LastName, x => x.Person.LastName)
                     .RuleFor(x => x.PassportId, x => x.UniqueIndex)
-                    .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth);
+                    .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
+                    .RuleFor(x => x.Salary, x=> x.Random.Int(1000, 10000));
+            return employeeFaker.Generate(1000);       
+        }
+
+
+        public Dictionary<Client, List<Account>> GenerateClientAccountDictionary()
+        {
+            var accountDictionary = new Dictionary<Client, List<Account>>();
+            Random random = new Random();
+            Currency currency = new Currency
+            {
+                Name = "USD",
+                Code = 840
+            };
+            Faker<Account> accountFaker = new Faker<Account>()
+                .RuleFor(x => x.Currency, x => currency)
+                .RuleFor(x => x.Amount, x => x.Random.Int(1000, 10000));
+
             for (int i = 0; i < 1000; i++)
             {
-                var employee = employeeFaker.Generate();
-                employee.Salary = 10000 - i;
-                employees.Add(employee);             
+                accountDictionary.Add(_сlientFaker.Generate(),
+                    accountFaker.GenerateBetween(1, 3));
             }
-            return employees;
+            return accountDictionary;
         }
     }
 }
