@@ -26,9 +26,32 @@ namespace Service.Tests
             // Act
             bool indicator = false;
 
-            Account accounts = accountDictionary[newClient].Last();           
-            if (accounts != null) indicator = true;
+            Account account = accountDictionary[newClient].Last();           
+            if (account != null) indicator = true;
 
+            // Assert
+            Assert.True(indicator);
+        }
+
+        [Fact]
+        public void EqualsPositivTest()
+        {
+            // Arrange
+            TestDataGenerator dataGenerator = new TestDataGenerator();
+            var employeeList = dataGenerator.GenerateTestEmployeeList();
+            Employee employeeInList = employeeList.Last();
+            Employee employee = new Employee
+            {
+                Name = employeeInList.Name,
+                LastName = employeeInList.LastName,
+                PassportId = employeeInList.PassportId,
+                Birthday = employeeInList.Birthday,
+                Salary = employeeInList.Salary
+            };
+
+            // Act
+            bool indicator = false;
+            if (employeeList.Contains(employee)) indicator = true;
 
             // Assert
             Assert.True(indicator);
