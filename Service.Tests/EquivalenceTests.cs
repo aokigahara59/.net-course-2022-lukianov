@@ -25,8 +25,9 @@ namespace Service.Tests
 
             // Act
             bool indicator = false;
-            Account account = accountDictionary[newClient];           
-            if (account != null) indicator = true;
+
+            Account accounts = accountDictionary[newClient].Last();           
+            if (accounts != null) indicator = true;
 
 
             // Assert

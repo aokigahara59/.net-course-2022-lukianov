@@ -48,20 +48,23 @@ namespace Services
         }
 
 
-        public Dictionary<Client, Account> GenerateClientAccountDictionary()
+        public Dictionary<Client, List<Account>> GenerateClientAccountDictionary()
         {
-            Dictionary<Client, Account> accountDictionary = new Dictionary<Client, Account>();
+            var accountDictionary = new Dictionary<Client, List<Account>>();
             Random random = new Random();
             Currency currency = new Currency
             {
                 Name = "USD",
                 Code = 840
             };
+            Faker<Account> accountFaker = new Faker<Account>()
+                .RuleFor(x => x.Currency, x => currency)
+                .RuleFor(x => x.Amount, x => x.Random.Int(1000, 10000));
 
             for (int i = 0; i < 1000; i++)
             {
                 accountDictionary.Add(_сlientFaker.Generate(),
-                    new Account { Currency = currency, Amount = random.Next(100, 10000) });
+                    accountFaker.GenerateBetween(1, 3));
             }
             return accountDictionary;
         }
