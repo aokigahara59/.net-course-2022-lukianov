@@ -1,8 +1,7 @@
-﻿using Xunit;
-using Models;
-using Services;
+﻿using Models;
+using Xunit;
 
-namespace Service.Tests
+namespace Services.Tests
 {
     public class EquivalenceTests
     {
