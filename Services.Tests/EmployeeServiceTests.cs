@@ -1,16 +1,26 @@
 ﻿using Models;
 using Services.Exeptions;
+using Services.Filters;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Services.Tests
 {
     public class EmployeeServiceTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public EmployeeServiceTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void AddEmployeeAgeLimitException()
         {
             // Arrange
-            var employeeService = new EmployeeService();
+            var employeeStorage = new EmployeeStorage();
+            var employeeService = new EmployeeService(employeeStorage);
             var employee = new Employee
             {
                 Birthday = new DateTime(2005, 12, 15)
@@ -24,7 +34,8 @@ namespace Services.Tests
         public void AddEmployeeArgumentNullException()
         {
             // Arrange
-            var employeeService = new EmployeeService();
+            var employeeStorage = new EmployeeStorage();
+            var employeeService = new EmployeeService(employeeStorage);
             var employee = new Employee
             {
                 Birthday = new DateTime(2002, 12, 15)
@@ -33,5 +44,66 @@ namespace Services.Tests
             // Act and Assert
             Assert.Throws<ArgumentNullException>(() => employeeService.AddEmployee(employee));
         }
+
+        [Fact]
+        public void AddEmployeePositivTest()
+        {
+            // Arrange
+            var employeeStorage = new EmployeeStorage();
+            var employeeService = new EmployeeService(employeeStorage);
+            var employee = new Employee
+            {
+                Birthday = new DateTime(2002, 12, 15),
+                PassportId = 225546
+            };
+
+            // Act
+            employeeService.AddEmployee(employee);
+
+            // Assert
+            Assert.Contains(employee, employeeService.GetEmployees(new EmployeeFilter()));
+        }
+
+
+        [Fact]
+        public void GetClientsByFilterTest()
+        {
+            // Arrange
+            var employeeStorage = new EmployeeStorage();
+            var employeeService = new EmployeeService(employeeStorage);
+
+            var dataGenerator = new TestDataGenerator();
+            var filter = new EmployeeFilter
+            {
+                MinBirthday = new DateTime(1999, 1, 1),
+                MaxBirthday = new DateTime(1980, 1, 1),
+                LastName = "Donnelly"
+            };
+
+            // Act
+            var employees = dataGenerator.GenerateTestEmployeeList();
+
+            foreach (var employee in employees)
+            {
+                try
+                {
+                    employeeService.AddEmployee(employee);
+                }
+                catch (Exception ex)
+                {
+                    _testOutputHelper.WriteLine("");
+                }
+            }
+
+            var filteredEmployees = employeeService.GetEmployees(filter);
+            _testOutputHelper.WriteLine(filteredEmployees.Count().ToString());
+
+            // Assert
+            Assert.Multiple(
+                () => filteredEmployees.All(x => x.Birthday <= filter.MinBirthday),
+                () => filteredEmployees.All(x => x.Birthday >= filter.MaxBirthday),
+                () => filteredEmployees.All(x => x.LastName == filter.LastName));
+        }
+
     }
 }

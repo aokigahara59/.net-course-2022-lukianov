@@ -1,11 +1,17 @@
 ﻿using Models;
 using Services.Exeptions;
+using Services.Filters;
 
 namespace Services
 {
     public class EmployeeService
     {
-        private List<Employee> _employees = new List<Employee>();
+        private EmployeeStorage _storage;
+
+        public EmployeeService(EmployeeStorage storage)
+        {
+            _storage = storage;
+        }
 
         public void AddEmployee(Employee employee)
         {
@@ -16,7 +22,39 @@ namespace Services
 
             if (employee.PassportId == 0) throw new ArgumentNullException("employee сотрудника нет паспортных данных!");
 
-            _employees.Add(employee);
+            _storage.Add(employee);
+        }
+
+        public List<Employee> GetEmployees(EmployeeFilter filter)
+        {
+            var request = _storage.Employees.AsEnumerable();
+
+            if (filter.PassportId != 0)
+            {
+                request = request.Where(x => x.PassportId == filter.PassportId);
+            }
+
+            if (filter.LastName != null)
+            {
+                request = request.Where(x => x.LastName == filter.LastName);
+            }
+
+            if (filter.MinBirthday != default(DateTime))
+            {
+                request = request.Where(x => x.Birthday <= filter.MinBirthday);
+            }
+
+            if (filter.MaxBirthday != default(DateTime))
+            {
+                request = request.Where(x => x.Birthday >= filter.MaxBirthday);
+            }
+
+            if (filter.Contract != null)
+            {
+                request = request.Where(x => x.Contract == filter.Contract);
+            }
+
+            return request.ToList();
         }
     }
 }

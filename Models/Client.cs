@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
     public class Client : Person
     {
@@ -24,10 +18,28 @@ namespace Models
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode()
-                + LastName.GetHashCode()
-                + PassportId.GetHashCode()
-                + PhoneNumber.GetHashCode();
+            int code = 0;
+            if (Name != null)
+            {
+                code += Name.GetHashCode();
+            }
+
+            if (LastName != null)
+            {
+                code += LastName.GetHashCode();
+            }
+
+            if (PhoneNumber != null)
+            {
+                code += PhoneNumber.GetHashCode();
+            }
+
+            if (PassportId != 0)
+            {
+                code += PassportId.GetHashCode();
+            }
+
+            return code;
         }
     }
 }
