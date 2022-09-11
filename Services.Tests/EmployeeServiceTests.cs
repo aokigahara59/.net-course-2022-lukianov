@@ -2,19 +2,11 @@
 using Services.Exeptions;
 using Services.Filters;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Services.Tests
 {
     public class EmployeeServiceTests
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public EmployeeServiceTests(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public void AddEmployeeAgeLimitException()
         {

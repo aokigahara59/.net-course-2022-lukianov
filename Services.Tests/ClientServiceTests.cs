@@ -141,6 +141,7 @@ namespace Services.Tests
 
             int youngestClientAge = DateTime.Today.Year - youngestClient.Birthday.Year;
 
+
             _testOutputHelper.WriteLine($"Youngest client is {youngestClient.Name}: {youngestClientAge}");
 
 
@@ -153,7 +154,7 @@ namespace Services.Tests
 
 
             double averageAge = clientService.GetClients(new ClientFilter())
-                .Average(x => DateTime.Today.Year - x.Key.Birthday.Year );
+                .Average(x => DateTime.Today.Year - x.Key.Birthday.Year);
 
             _testOutputHelper.WriteLine($"Average age is {Math.Ceiling(averageAge)}");
 
