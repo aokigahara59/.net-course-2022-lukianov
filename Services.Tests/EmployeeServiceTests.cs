@@ -89,14 +89,17 @@ namespace Services.Tests
                 {
                     employeeService.AddEmployee(employee);
                 }
+                catch (AgeLimitException ex)
+                {
+                    Assert.Fail("Есть сотрудники младше 18 лет!");
+                }
                 catch (Exception ex)
                 {
-                    _testOutputHelper.WriteLine("");
+                    Assert.Fail("Неверные данные сотрудкиков!");
                 }
             }
 
             var filteredEmployees = employeeService.GetEmployees(filter);
-            _testOutputHelper.WriteLine(filteredEmployees.Count().ToString());
 
             // Assert
             Assert.Multiple(

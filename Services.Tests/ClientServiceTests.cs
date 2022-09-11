@@ -89,14 +89,17 @@ namespace Services.Tests
                 {
                     clientService.AddClient(client);
                 }
+                catch (AgeLimitException ex)
+                {
+                    Assert.Fail("Есть клиенты младше 18 лет!");
+                }
                 catch (Exception ex)
                 {
-                    _testOutputHelper.WriteLine("");
+                    Assert.Fail("Неверные данные клиентов!");
                 }
             }
 
             var filteredClients = clientService.GetClients(filter);
-            _testOutputHelper.WriteLine(filteredClients.Count().ToString());
 
             // Assert
             Assert.Multiple(
@@ -123,9 +126,13 @@ namespace Services.Tests
                 {
                     clientService.AddClient(client);
                 }
+                catch (AgeLimitException ex)
+                {
+                    Assert.Fail("Есть клиенты младше 18 лет!");
+                }
                 catch (Exception ex)
                 {
-                    _testOutputHelper.WriteLine("");
+                    Assert.Fail("Неверные данные клиентов!");
                 }
             }
 

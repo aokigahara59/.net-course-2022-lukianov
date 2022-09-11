@@ -10,7 +10,7 @@ namespace Services
         private ClientStorage _clientStorage;
         public ClientService(ClientStorage storage)
         {
-            this._clientStorage = storage;
+            _clientStorage = storage;
         }
 
         public void AddClient(Client client)
