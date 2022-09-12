@@ -13,7 +13,7 @@ namespace Services.Storages
 
         public void Delete(Employee item)
         {
-            throw new NotImplementedException();
+            Employees.Remove(item);
         }
 
         public void Update(Employee item)
