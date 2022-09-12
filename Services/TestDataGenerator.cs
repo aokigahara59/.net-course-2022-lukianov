@@ -13,7 +13,7 @@ namespace Services
         private Faker<Client> _сlientFaker = new Faker<Client>()
                     .RuleFor(x => x.Name, x => x.Person.FirstName)
                     .RuleFor(x => x.LastName, x => x.Person.LastName)
-                    .RuleFor(x => x.PassportId, x => x.UniqueIndex)
+                    .RuleFor(x => x.PassportId, x => x.GetHashCode())
                     .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
                     .RuleFor(x => x.PhoneNumber, x => x.Person.Phone);
 
@@ -41,7 +41,7 @@ namespace Services
             Faker<Employee> employeeFaker = new Faker<Employee>()
                     .RuleFor(x => x.Name, x => x.Person.FirstName)
                     .RuleFor(x => x.LastName, x => x.Person.LastName)
-                    .RuleFor(x => x.PassportId, x => x.UniqueIndex)
+                    .RuleFor(x => x.PassportId, x => x.GetHashCode())
                     .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
                     .RuleFor(x => x.Salary, x=> x.Random.Int(1000, 10000));
             return employeeFaker.Generate(1000);       
