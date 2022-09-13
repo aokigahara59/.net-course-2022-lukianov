@@ -29,9 +29,7 @@ namespace Services.Storages
 
         public void AddAccount(Client client, Account account)
         {
-            List<Account> accounts = Data[client];
-            accounts.Add(account);
-            Data.Add(client, accounts);
+            Data[client].Add(account);
         }
 
         public void Delete(Client item)
@@ -39,21 +37,33 @@ namespace Services.Storages
             Data.Remove(item);
         }
 
-        public void RemoveAccount(Client client, Account account)
+        public void DeleteAccount(Client client, Account account)
         {
-            List<Account> accounts = Data[client];
-            accounts.Remove(account);
-            Data.Add(client, accounts);
+            Data[client].Remove(account);
         }
 
         public void Update(Client item)
         {
-            if (Data[item] == null) throw new NullReferenceException("Такого клиента нет в списке!");
+            Client clientInData = Data.Keys.First(x => x.PassportId == item.PassportId);
+
+            if (clientInData == null) throw new NullReferenceException("Такого клиента нет в списке!");
+            
+            clientInData.Name = item.Name;
+            clientInData.LastName = item.LastName;
+            clientInData.PhoneNumber = item.PhoneNumber;
         }
 
         public void UpdateAccount(Client client, Account account)
         {
-            throw new NotImplementedException();
+            Client clientInData = Data.Keys.First(x => x.PassportId == client.PassportId);
+
+            if (clientInData == null) throw new NullReferenceException("Такого клиента нет в списке!");
+
+            Account accountInData = Data[clientInData].First(x => x.Currency.Equals(account.Currency));
+
+            if (accountInData == null) throw new NullReferenceException("У клиента нет такого счета!");
+
+            accountInData.Amount = account.Amount;
         }
     }
 }
