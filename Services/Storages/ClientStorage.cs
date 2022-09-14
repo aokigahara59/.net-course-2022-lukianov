@@ -5,6 +5,7 @@ namespace Services.Storages
     public class ClientStorage : IClientStorage
     {
         public Dictionary<Client, List<Account>> Data { get; }
+
         public ClientStorage()
         {
             Data = new Dictionary<Client, List<Account>>();
@@ -46,7 +47,6 @@ namespace Services.Storages
         {
             Client clientInData = Data.Keys.First(x => x.PassportId == item.PassportId);
 
-            if (clientInData == null) throw new NullReferenceException("Такого клиента нет в списке!");
             
             clientInData.Name = item.Name;
             clientInData.LastName = item.LastName;
@@ -57,11 +57,7 @@ namespace Services.Storages
         {
             Client clientInData = Data.Keys.First(x => x.PassportId == client.PassportId);
 
-            if (clientInData == null) throw new NullReferenceException("Такого клиента нет в списке!");
-
             Account accountInData = Data[clientInData].First(x => x.Currency.Equals(account.Currency));
-
-            if (accountInData == null) throw new NullReferenceException("У клиента нет такого счета!");
 
             accountInData.Amount = account.Amount;
         }

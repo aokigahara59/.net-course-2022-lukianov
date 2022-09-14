@@ -26,6 +26,12 @@ namespace Services
             _clientStorage.Add(client);
         }
 
+        public void AddAccount(Client client, Account account)
+        {
+            if (!_clientStorage.Data.ContainsKey(client)) throw new NullReferenceException("Нет такого клиента!");
+            _clientStorage.Data[client].Add(account);
+        }
+
 
         public Dictionary<Client, List<Account>> GetClients(ClientFilter filter)
         {

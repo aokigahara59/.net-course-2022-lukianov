@@ -19,7 +19,6 @@ namespace Services.Storages
         public void Update(Employee item)
         {
             Employee employee = Employees.First(x => x.PassportId == item.PassportId);
-            if (employee == null) throw new NullReferenceException("Такого сотрудника нет в списке");
 
             employee.Name = item.Name;
             employee.LastName = item.LastName;
