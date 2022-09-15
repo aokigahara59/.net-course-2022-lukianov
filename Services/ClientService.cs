@@ -1,14 +1,15 @@
 ﻿using Models;
 using Services.Exeptions;
 using Services.Filters;
+using Services.Storages;
 
 namespace Services
 {
     public class ClientService
     {
 
-        private ClientStorage _clientStorage;
-        public ClientService(ClientStorage storage)
+        private IClientStorage _clientStorage;
+        public ClientService(IClientStorage storage)
         {
             _clientStorage = storage;
         }
@@ -25,12 +26,18 @@ namespace Services
             _clientStorage.Add(client);
         }
 
+        public void AddAccount(Client client, Account account)
+        {
+            if (!_clientStorage.Data.ContainsKey(client)) throw new NullReferenceException("Нет такого клиента!");
+            _clientStorage.Data[client].Add(account);
+        }
+
 
         public Dictionary<Client, List<Account>> GetClients(ClientFilter filter)
         {
-            var request = _clientStorage.Clients.AsEnumerable();
+            var request = _clientStorage.Data.AsEnumerable();
 
-            if (filter.PassportId != 0 )
+            if (filter.PassportId != 0)
             {
                 request = request.Where(x => x.Key.PassportId == filter.PassportId);
             }
