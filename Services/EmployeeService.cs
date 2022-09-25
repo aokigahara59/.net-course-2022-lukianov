@@ -1,20 +1,24 @@
-﻿using Models;
+﻿using ModelsDb;
 using Services.Exeptions;
 using Services.Filters;
-using Services.Storages;
 
 namespace Services
 {
     public class EmployeeService
     {
-        private EmployeeStorage _storage;
+        private ApplicationContext _dbContext;
 
-        public EmployeeService(EmployeeStorage storage)
+        public EmployeeService()
         {
-            _storage = storage;
+            _dbContext = new ApplicationContext();
         }
 
-        public void AddEmployee(Employee employee)
+        public EmployeeDb GetEmployee(Guid id)
+        {
+            return _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void AddEmployee(EmployeeDb employee)
         {
             if (employee.Birthday > new DateTime(2004, 1, 1))
             {
@@ -23,12 +27,57 @@ namespace Services
 
             if (employee.PassportId == 0) throw new ArgumentNullException("employee сотрудника нет паспортных данных!");
 
-            _storage.Add(employee);
+            _dbContext.Employees.Add(employee);
+            _dbContext.SaveChanges();
         }
 
-        public List<Employee> GetEmployees(EmployeeFilter filter)
+        public void UpdateEmployee(Guid id, EmployeeDb employee)
         {
-            var request = _storage.Employees.AsEnumerable();
+            var oldEmployee = GetEmployee(id);
+
+            if (employee.Name != null)
+            {
+                oldEmployee.Name = employee.Name;
+            }
+
+            if (employee.LastName != null)
+            {
+                oldEmployee.LastName = employee.LastName;
+            }
+
+            if (employee.Birthday != default(DateTime))
+            {
+                oldEmployee.Birthday = employee.Birthday;
+            }
+
+            if (employee.PassportId != 0)
+            {
+                oldEmployee.PassportId = employee.PassportId;
+            }
+
+            if (employee.Salary != 0)
+            {
+                oldEmployee.Salary = employee.Salary;
+            }
+
+            if (employee.Contract != null)
+            {
+                oldEmployee.Contract = employee.Contract;
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteEmployee(Guid id)
+        {
+            _dbContext.Employees.Remove(GetEmployee(id));
+            _dbContext.SaveChanges();
+        }
+
+
+        public List<EmployeeDb> GetEmployees(EmployeeFilter filter)
+        {
+            var request = _dbContext.Employees.AsQueryable();
 
             if (filter.PassportId != 0)
             {
@@ -53,6 +102,16 @@ namespace Services
             if (filter.Contract != null)
             {
                 request = request.Where(x => x.Contract == filter.Contract);
+            }
+
+            if (filter.Offset != 0)
+            {
+                request.Skip(filter.Offset);
+            }
+
+            if (filter.Limit != 0)
+            {
+                request.Take(filter.Limit);
             }
 
             return request.ToList();

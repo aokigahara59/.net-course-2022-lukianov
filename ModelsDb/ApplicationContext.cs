@@ -2,7 +2,7 @@
 
 namespace ModelsDb
 {
-    public class AppContext : DbContext
+    public class ApplicationContext : DbContext
     {
         public DbSet<ClientDb> Clients { get; set; }
         public DbSet<AccountDb> Accounts { get; set; }
