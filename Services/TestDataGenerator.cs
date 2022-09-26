@@ -13,22 +13,14 @@ namespace Services
                     .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
                     .RuleFor(x => x.PhoneNumber, x => x.Person.Phone);
 
-        private Faker<ClientDb> _clientDbFaker = new Faker<ClientDb>()
-                    .RuleFor(x => x.Id, x => x.Random.Guid())
-                    .RuleFor(x => x.Name, x => x.Person.FirstName)
-                    .RuleFor(x => x.LastName, x => x.Person.LastName)
-                    .RuleFor(x => x.PassportId, x => x.GetHashCode())
-                    .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth.ToUniversalTime())
-                    .RuleFor(x => x.PhoneNumber, x => x.Person.Phone);
-
         public List<Client> GenerateTestClientsList()
         {
             return _сlientFaker.Generate(1000);
         }
 
-        public List<ClientDb> GenerateTestClientsDbList(int count)
+        public List<Client> GenerateTestClientsList(int count)
         {
-            return _clientDbFaker.Generate(count);
+            return _сlientFaker.Generate(count);
         }
 
         public Dictionary<string, Client> GenerateTestClientsDictionary()
@@ -50,7 +42,8 @@ namespace Services
                     .RuleFor(x => x.LastName, x => x.Person.LastName)
                     .RuleFor(x => x.PassportId, x => x.GetHashCode())
                     .RuleFor(x => x.Birthday, x => x.Person.DateOfBirth)
-                    .RuleFor(x => x.Salary, x=> x.Random.Int(1000, 10000));
+                    .RuleFor(x => x.Salary, x=> x.Random.Int(1000, 10000))
+                    .RuleFor(x => x.Contract, x => $"{x.Person.FullName} was hired on 3 years"); ;
             return employeeFaker.Generate(1000);       
         }
 

@@ -1,4 +1,6 @@
-﻿using Services.Exeptions;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
+using Services.Exeptions;
 using Services.Filters;
 using ModelsDb;
 
@@ -14,12 +16,51 @@ namespace Services
             _dbContext = new ApplicationContext();
         }
 
-        public ClientDb GetClient(Guid id)
+        public ClientDb ConvertClientToClientDb(Client client)
+        {
+            return new ClientDb
+            {
+                Name = client.Name,
+                LastName = client.LastName,
+                Birthday = client.Birthday.ToUniversalTime(),
+                PassportId = client.PassportId,
+                Bonus = client.Bonus,
+                PhoneNumber = client.PhoneNumber
+            };
+        }
+
+
+
+        public Client ConvertClientDbToClient(ClientDb client)
+        {
+            return new Client
+            {
+                Name = client.Name,
+                LastName = client.LastName,
+                Birthday = client.Birthday.ToUniversalTime(),
+                PassportId = client.PassportId,
+                Bonus = client.Bonus,
+                PhoneNumber = client.PhoneNumber,
+            };
+        }
+
+        
+
+        public Client GetClient(Guid id)
+        {
+            ClientDb clientDb = _dbContext.Clients.FirstOrDefault(x => x.Id == id);
+
+            if (clientDb == null) throw new NullReferenceException("Такого клиента нет!");
+
+            return ConvertClientDbToClient(clientDb);
+        }
+
+        public ClientDb GetClientDb(Guid id)
         {
             return _dbContext.Clients.FirstOrDefault(x => x.Id == id);
         }
 
-        public void AddClient(ClientDb client)
+        public void AddClient(Client client)
         {
             if (client.Birthday > new DateTime(2004, 1, 1))
             {
@@ -28,67 +69,77 @@ namespace Services
 
             if (client.PassportId == 0) throw new ArgumentNullException("У клиента нет паспортных данных!");
 
-            _dbContext.Clients.Add(client);
+            ClientDb clientDb = ConvertClientToClientDb(client);
+
+            _dbContext.Clients.Add(clientDb);
 
             _dbContext.Accounts.Add(new AccountDb
             {
                 AccountId = new Guid(),
                 Amount = 0,
-                Client = client,
+                Client = clientDb,
                 CurrencyName = "USD"
             });
 
             _dbContext.SaveChanges();
         }
 
-        public void AddAccount(Guid clientId, AccountDb account)
+        public void AddAccount(Guid clientId, Account account)
         {
-            ClientDb client = GetClient(clientId);
+            ClientDb client = GetClientDb(clientId);
 
             if (client == null) throw new NullReferenceException("Нет такого клиента!");
 
-            account.Client = client;
-
-            _dbContext.Accounts.Add(account);
+            _dbContext.Accounts.Add(new AccountDb
+            {
+                AccountId = new Guid(),
+                Amount = account.Amount,
+                CurrencyName = account.Currency.Name,
+                Client = client
+            });
 
             _dbContext.SaveChanges();
         }
 
-        public void UpdateClient(Guid id, ClientDb client)
+        public void UpdateClient(Guid id, Client client)
         {
-            var oldClient = GetClient(id);
+            ClientDb oldClient = GetClientDb(id);
 
             if (client.Name != null)
             {
-                oldClient.Name = client.Name;
+                _dbContext.Clients.Update(oldClient).Entity.Name = client.Name;
+                _dbContext.SaveChanges();
             }
 
             if (client.LastName != null)
             {
-                oldClient.LastName = client.LastName;
+                _dbContext.Clients.Update(oldClient).Entity.LastName = client.LastName;
+                _dbContext.SaveChanges();
             }
 
             if (client.Birthday != default(DateTime))
             {
-                oldClient.Birthday = client.Birthday;
+                _dbContext.Clients.Update(oldClient).Entity.Birthday = client.Birthday.ToUniversalTime();
+                _dbContext.SaveChanges();
             }
 
             if (client.PassportId != 0)
             {
-                oldClient.PassportId = client.PassportId;
+                _dbContext.Clients.Update(oldClient).Entity.PassportId = client.PassportId;
+                _dbContext.SaveChanges();
             }
 
             if (client.PhoneNumber != null)
             {
-                oldClient.PhoneNumber = client.PhoneNumber;
+                _dbContext.Clients.Update(oldClient).Entity.PhoneNumber = client.PhoneNumber;
+                _dbContext.SaveChanges();
             }
 
-            _dbContext.SaveChanges();
         }
 
         public void DeleteClient(Guid id)
         {
-            _dbContext.Clients.Remove(GetClient(id));
+            _dbContext.Clients.Remove(GetClientDb(id));
             _dbContext.SaveChanges();
         }
 
@@ -98,7 +149,7 @@ namespace Services
             _dbContext.SaveChanges();
         }
 
-        public List<ClientDb> GetClients(ClientFilter filter)
+        public List<Client> GetClients(ClientFilter filter)
         {
             var request = _dbContext.Clients.AsQueryable();
 
@@ -137,7 +188,13 @@ namespace Services
                 request.Take(filter.Limit);
             }
 
-            return request.ToList();
+            List<Client> clients = new List<Client>();
+            foreach (ClientDb clientDb in request)
+            {
+                clients.Add(ConvertClientDbToClient(clientDb));
+            }
+
+            return clients;
         }
     }
 }

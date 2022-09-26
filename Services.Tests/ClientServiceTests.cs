@@ -1,4 +1,5 @@
-﻿using ModelsDb;
+﻿using Models;
+using ModelsDb;
 using Services.Exeptions;
 using Services.Filters;
 using Xunit;
@@ -20,7 +21,7 @@ namespace Services.Tests
         {
             // Arrange
             var clientService = new ClientService();
-            var client = new ClientDb
+            var client = new Client
             {
                 Birthday = new DateTime(2005, 12, 15)
             };
@@ -34,7 +35,7 @@ namespace Services.Tests
         {
             // Arrange
             var clientService = new ClientService();
-            var client = new ClientDb()
+            var client = new Client
             {
                 Birthday = new DateTime(2002, 12, 15)
             };
@@ -48,9 +49,8 @@ namespace Services.Tests
         {
             // Arrange
             var clientService = new ClientService();
-            var client = new ClientDb
+            var client = new Client
             {
-                Id = new Guid(),
                 Name = "John",
                 LastName = "Loye",
                 PhoneNumber = "+37377775544",
@@ -99,32 +99,41 @@ namespace Services.Tests
         public void AddAccountPositivTest()
         {
             // Arrange
-            Guid id = Guid.Parse("8175b038-c57c-fa04-8f7c-155f0b531224");
+            Guid id = Guid.Parse("5f804c52-e167-b2aa-d232-008f78067738");
             var clientService = new ClientService();
 
             // Act
-            var account = new AccountDb
+            var account = new Account
             {
-                AccountId = new Guid(),
                 Amount = 554,
-                CurrencyName = "Rub"
+                Currency = new Currency{ Code = 254, Name = "RUB"}
             };
+
             clientService.AddAccount(id, account);
 
+            var accountDb = new AccountDb
+            {
+                Amount = 554,
+                CurrencyName = "RUB",
+                Client = clientService.GetClientDb(id)
+            };
+
+           
+
             // Assert
-            Assert.Contains(account, clientService.GetClient(id).Accounts);
+            Assert.Contains(accountDb, clientService.GetClientDb(id).Accounts);
         }
 
         [Fact]
         public void UpdateClientPositivTest()
         {
             // Arrange
-            Guid id = Guid.Parse("a7f36589-eb0b-4e6e-19cb-0d718ca8e36c");
+            Guid id = Guid.Parse("6e6c9848-15e8-4f91-8b3c-f4e43832f4a2");
             var clientService = new ClientService();
             var oldClient = clientService.GetClient(id);
 
             // Act
-            var newClientsData = new ClientDb
+            var newClientsData = new Client
             {
                 Name = "Stepan",
                 LastName = "Igorev",
@@ -155,7 +164,7 @@ namespace Services.Tests
             };
 
             // Act
-            var clients = dataGenerator.GenerateTestClientsDbList(100);
+            var clients = dataGenerator.GenerateTestClientsList(100);
 
 
             foreach (var client in clients)
@@ -192,7 +201,7 @@ namespace Services.Tests
             var dataGenerator = new TestDataGenerator();
 
             // Act
-            var clients = dataGenerator.GenerateTestClientsDbList(100);
+            var clients = dataGenerator.GenerateTestClientsList(100);
 
             foreach (var client in clients)
             {

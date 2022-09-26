@@ -1,4 +1,5 @@
-﻿using ModelsDb;
+﻿using Models;
+using ModelsDb;
 using Services.Exeptions;
 using Services.Filters;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Services.Tests
         {
             // Arrange
             var employeeService = new EmployeeService();
-            var employee = new EmployeeDb()
+            var employee = new Employee
             {
                 Birthday = new DateTime(2005, 12, 15)
             };
@@ -26,7 +27,7 @@ namespace Services.Tests
         {
             // Arrange
             var employeeService = new EmployeeService();
-            var employee = new EmployeeDb
+            var employee = new Employee
             {
                 Birthday = new DateTime(2002, 12, 15)
             };
@@ -40,9 +41,8 @@ namespace Services.Tests
         {
             // Arrange
             var employeeService = new EmployeeService();
-            var employee = new EmployeeDb
+            var employee = new Employee
             {
-                Id = new Guid(),
                 Name = "John",
                 LastName = "Loye",
                 Contract = "Jonh Loye is hired for next 3 years",
@@ -96,7 +96,7 @@ namespace Services.Tests
             var oldEmployee = employeeService.GetEmployee(id);
 
             // Act
-            var newEmployeeData = new EmployeeDb
+            var newEmployeeData = new Employee
             {
                 Name = "Stepan",
                 LastName = "Igorev",
@@ -121,12 +121,12 @@ namespace Services.Tests
             var filter = new EmployeeFilter
             {
                 MinBirthday = new DateTime(1999, 1, 1).ToUniversalTime(),
-                MaxBirthday = new DateTime(1980, 1, 1).ToUniversalTime(),
-                LastName = "Donnelly"
+                MaxBirthday = new DateTime(1960, 1, 1).ToUniversalTime(),
+                LastName = "Kutch"
             };
 
             // Act
-            var employees = dataGenerator.GenerateTestEmployeeDbList();
+            var employees = dataGenerator.GenerateTestEmployeeList();
 
             foreach (var employee in employees)
             {

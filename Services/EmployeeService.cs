@@ -1,4 +1,5 @@
-﻿using ModelsDb;
+﻿using Models;
+using ModelsDb;
 using Services.Exeptions;
 using Services.Filters;
 
@@ -13,12 +14,44 @@ namespace Services
             _dbContext = new ApplicationContext();
         }
 
-        public EmployeeDb GetEmployee(Guid id)
+        public EmployeeDb ConvertEmployeeToEmployeeDb(Employee employee)
         {
-            return _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+            return new EmployeeDb
+            {
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Birthday = employee.Birthday.ToUniversalTime(),
+                PassportId = employee.PassportId,
+                Bonus = employee.Bonus,
+                Salary = employee.Salary,
+                Contract = employee.Contract
+            };
         }
 
-        public void AddEmployee(EmployeeDb employee)
+        public Employee ConvertEmployeeDbToEmployee(EmployeeDb employee)
+        {
+            return new Employee
+            {
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Birthday = employee.Birthday.ToUniversalTime(),
+                PassportId = employee.PassportId,
+                Bonus = employee.Bonus,
+                Salary = employee.Salary,
+                Contract = employee.Contract
+            };
+        }
+
+        public Employee GetEmployee(Guid id)
+        {
+            EmployeeDb employeeDb = _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+
+            if (employeeDb == null) throw new NullReferenceException("Такого сотрудника нет!");
+
+            return ConvertEmployeeDbToEmployee(employeeDb);
+        }
+
+        public void AddEmployee(Employee employee)
         {
             if (employee.Birthday > new DateTime(2004, 1, 1))
             {
@@ -27,55 +60,60 @@ namespace Services
 
             if (employee.PassportId == 0) throw new ArgumentNullException("employee сотрудника нет паспортных данных!");
 
-            _dbContext.Employees.Add(employee);
+            _dbContext.Employees.Add(ConvertEmployeeToEmployeeDb(employee));
             _dbContext.SaveChanges();
         }
 
-        public void UpdateEmployee(Guid id, EmployeeDb employee)
+        public void UpdateEmployee(Guid id, Employee employee)
         {
-            var oldEmployee = GetEmployee(id);
+            EmployeeDb oldEmployee = ConvertEmployeeToEmployeeDb(GetEmployee(id));
 
             if (employee.Name != null)
             {
-                oldEmployee.Name = employee.Name;
+                _dbContext.Employees.Update(oldEmployee).Entity.Name = employee.Name;
+                _dbContext.SaveChanges();
             }
 
             if (employee.LastName != null)
             {
-                oldEmployee.LastName = employee.LastName;
+               _dbContext.Employees.Update(oldEmployee).Entity.LastName = employee.LastName;
+               _dbContext.SaveChanges();
             }
 
             if (employee.Birthday != default(DateTime))
             {
-                oldEmployee.Birthday = employee.Birthday;
+                _dbContext.Employees.Update(oldEmployee).Entity.Birthday = employee.Birthday;
+                _dbContext.SaveChanges();
             }
 
             if (employee.PassportId != 0)
             {
-                oldEmployee.PassportId = employee.PassportId;
+                _dbContext.Employees.Update(oldEmployee).Entity.PassportId = employee.PassportId;
+                _dbContext.SaveChanges();
             }
 
             if (employee.Salary != 0)
             {
-                oldEmployee.Salary = employee.Salary;
+                _dbContext.Employees.Update(oldEmployee).Entity.Salary = employee.Salary;
+                _dbContext.SaveChanges();
             }
 
             if (employee.Contract != null)
             {
-                oldEmployee.Contract = employee.Contract;
+                _dbContext.Employees.Update(oldEmployee).Entity.Contract = employee.Contract;
+                _dbContext.SaveChanges();
             }
 
-            _dbContext.SaveChanges();
         }
 
         public void DeleteEmployee(Guid id)
         {
-            _dbContext.Employees.Remove(GetEmployee(id));
+            _dbContext.Employees.Remove(ConvertEmployeeToEmployeeDb(GetEmployee(id)));
             _dbContext.SaveChanges();
         }
 
 
-        public List<EmployeeDb> GetEmployees(EmployeeFilter filter)
+        public List<Employee> GetEmployees(EmployeeFilter filter)
         {
             var request = _dbContext.Employees.AsQueryable();
 
@@ -114,7 +152,13 @@ namespace Services
                 request.Take(filter.Limit);
             }
 
-            return request.ToList();
+            List<Employee> employees = new List<Employee>();
+            foreach (var employeeDb in request)
+            {
+                employees.Add(ConvertEmployeeDbToEmployee(employeeDb));
+            }
+
+            return employees;
         }
     }
 }
