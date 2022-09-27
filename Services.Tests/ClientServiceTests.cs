@@ -92,36 +92,7 @@ namespace Services.Tests
             clientService.DeleteClient(id);
 
             // Assert
-            Assert.Null(clientService.GetClient(id));
-        }
-
-        [Fact]
-        public void AddAccountPositivTest()
-        {
-            // Arrange
-            Guid id = Guid.Parse("5f804c52-e167-b2aa-d232-008f78067738");
-            var clientService = new ClientService();
-
-            // Act
-            var account = new Account
-            {
-                Amount = 554,
-                Currency = new Currency{ Code = 254, Name = "RUB"}
-            };
-
-            clientService.AddAccount(id, account);
-
-            var accountDb = new AccountDb
-            {
-                Amount = 554,
-                CurrencyName = "RUB",
-                Client = clientService.GetClientDb(id)
-            };
-
-           
-
-            // Assert
-            Assert.Contains(accountDb, clientService.GetClientDb(id).Accounts);
+            Assert.Throws<NullReferenceException>(() => clientService.GetClient(id));
         }
 
         [Fact]

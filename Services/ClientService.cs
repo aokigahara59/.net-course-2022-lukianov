@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Models;
 using Services.Exeptions;
 using Services.Filters;
 using ModelsDb;

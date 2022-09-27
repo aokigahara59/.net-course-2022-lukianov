@@ -84,7 +84,7 @@ namespace Services.Tests
             employeeService.DeleteEmployee(id);
 
             // Assert
-            Assert.Null(employeeService.GetEmployee(id));
+            Assert.Throws<NullReferenceException>(() => employeeService.GetEmployee(id));
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace Services.Tests
 
 
         [Fact]
-        public void GetClientsByFilterTest()
+        public void GetEmployeesByFilterTest()
         {
             // Arrange
             var employeeService = new EmployeeService();
