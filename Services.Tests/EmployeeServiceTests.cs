@@ -77,7 +77,7 @@ namespace Services.Tests
         public void DeleteEmployeePositivTest()
         {
             // Arrange
-            Guid id = Guid.Parse("645135de-8bf5-2cec-e409-4932d4ebb587");
+            Guid id = Guid.Parse("c477f923-3a2f-473c-8d40-e93736b36f6c");
             var employeeService = new EmployeeService();
 
             // Act

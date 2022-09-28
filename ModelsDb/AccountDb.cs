@@ -16,6 +16,9 @@ namespace ModelsDb
         [Column("amount")]
         public int Amount { get; set; }
 
+        [Column("client_id")]
+        public Guid ClientId { get; set; }
+
         public ClientDb Client { get; set; }
     }
 }

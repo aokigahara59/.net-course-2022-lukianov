@@ -15,7 +15,7 @@ namespace Services
             _dbContext = new ApplicationContext();
         }
 
-        public ClientDb ConvertClientToClientDb(Client client)
+        private ClientDb ConvertClientToClientDb(Client client)
         {
             return new ClientDb
             {
@@ -30,7 +30,7 @@ namespace Services
 
 
 
-        public Client ConvertClientDbToClient(ClientDb client)
+        private Client ConvertClientDbToClient(ClientDb client)
         {
             return new Client
             {
@@ -54,7 +54,7 @@ namespace Services
             return ConvertClientDbToClient(clientDb);
         }
 
-        public ClientDb GetClientDb(Guid id)
+        private ClientDb GetClientDb(Guid id)
         {
             return _dbContext.Clients.FirstOrDefault(x => x.Id == id);
         }

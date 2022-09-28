@@ -14,7 +14,7 @@ namespace Services
             _dbContext = new ApplicationContext();
         }
 
-        public EmployeeDb ConvertEmployeeToEmployeeDb(Employee employee)
+        private EmployeeDb ConvertEmployeeToEmployeeDb(Employee employee)
         {
             return new EmployeeDb
             {
@@ -28,7 +28,7 @@ namespace Services
             };
         }
 
-        public Employee ConvertEmployeeDbToEmployee(EmployeeDb employee)
+        private Employee ConvertEmployeeDbToEmployee(EmployeeDb employee)
         {
             return new Employee
             {
@@ -49,6 +49,15 @@ namespace Services
             if (employeeDb == null) throw new NullReferenceException("Такого сотрудника нет!");
 
             return ConvertEmployeeDbToEmployee(employeeDb);
+        }
+
+        private EmployeeDb GetEmployeeDb(Guid id)
+        {
+            EmployeeDb employeeDb = _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+
+            if (employeeDb == null) throw new NullReferenceException("Такого сотрудника нет!");
+
+            return employeeDb;
         }
 
         public void AddEmployee(Employee employee)
@@ -108,7 +117,7 @@ namespace Services
 
         public void DeleteEmployee(Guid id)
         {
-            _dbContext.Employees.Remove(ConvertEmployeeToEmployeeDb(GetEmployee(id)));
+            _dbContext.Employees.Remove(GetEmployeeDb(id));
             _dbContext.SaveChanges();
         }
 
