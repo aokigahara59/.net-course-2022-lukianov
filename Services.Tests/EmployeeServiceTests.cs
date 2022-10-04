@@ -1,7 +1,7 @@
 ﻿using Models;
+using ModelsDb;
 using Services.Exeptions;
 using Services.Filters;
-using Services.Storages;
 using Xunit;
 
 namespace Services.Tests
@@ -12,8 +12,7 @@ namespace Services.Tests
         public void AddEmployeeAgeLimitException()
         {
             // Arrange
-            var employeeStorage = new EmployeeStorage();
-            var employeeService = new EmployeeService(employeeStorage);
+            var employeeService = new EmployeeService();
             var employee = new Employee
             {
                 Birthday = new DateTime(2005, 12, 15)
@@ -27,8 +26,7 @@ namespace Services.Tests
         public void AddEmployeeArgumentNullException()
         {
             // Arrange
-            var employeeStorage = new EmployeeStorage();
-            var employeeService = new EmployeeService(employeeStorage);
+            var employeeService = new EmployeeService();
             var employee = new Employee
             {
                 Birthday = new DateTime(2002, 12, 15)
@@ -42,11 +40,15 @@ namespace Services.Tests
         public void AddEmployeePositivTest()
         {
             // Arrange
-            var employeeStorage = new EmployeeStorage();
-            var employeeService = new EmployeeService(employeeStorage);
+            var employeeService = new EmployeeService();
             var employee = new Employee
             {
-                Birthday = new DateTime(2002, 12, 15),
+                Name = "John",
+                LastName = "Loye",
+                Contract = "Jonh Loye is hired for next 3 years",
+                Salary = 555,
+                Bonus = 0,
+                Birthday = new DateTime(2002, 12, 15).ToUniversalTime(),
                 PassportId = 225546
             };
 
@@ -57,20 +59,70 @@ namespace Services.Tests
             Assert.Contains(employee, employeeService.GetEmployees(new EmployeeFilter()));
         }
 
-
         [Fact]
-        public void GetClientsByFilterTest()
+        public void GetEmployeeByIdPositivTest()
         {
             // Arrange
-            var employeeStorage = new EmployeeStorage();
-            var employeeService = new EmployeeService(employeeStorage);
+            Guid id = Guid.Parse("67e63271-06cc-9d5f-2026-55521a86c012");
+            var employeeService = new EmployeeService();
 
+            // Act
+            var employee = employeeService.GetEmployee(id);
+
+            // Assert
+            Assert.NotNull(employee);
+        }
+
+        [Fact]
+        public void DeleteEmployeePositivTest()
+        {
+            // Arrange
+            Guid id = Guid.Parse("c477f923-3a2f-473c-8d40-e93736b36f6c");
+            var employeeService = new EmployeeService();
+
+            // Act
+            employeeService.DeleteEmployee(id);
+
+            // Assert
+            Assert.Throws<NullReferenceException>(() => employeeService.GetEmployee(id));
+        }
+
+        [Fact]
+        public void UpdateEmployeePositivTest()
+        {
+            // Arrange
+            Guid id = Guid.Parse("67e63271-06cc-9d5f-2026-55521a86c012");
+            var employeeService = new EmployeeService();
+            var oldEmployee = employeeService.GetEmployee(id);
+
+            // Act
+            var newEmployeeData = new Employee
+            {
+                Name = "Stepan",
+                LastName = "Igorev",
+                Bonus = 5,
+            };
+
+            employeeService.UpdateEmployee(id, newEmployeeData);
+
+            // Assert
+            Assert.Multiple(() => oldEmployee.Name.Equals(newEmployeeData.Name),
+                () => oldEmployee.LastName.Equals(newEmployeeData.LastName),
+                () => oldEmployee.Bonus.Equals(newEmployeeData.Bonus));
+        }
+
+
+        [Fact]
+        public void GetEmployeesByFilterTest()
+        {
+            // Arrange
+            var employeeService = new EmployeeService();
             var dataGenerator = new TestDataGenerator();
             var filter = new EmployeeFilter
             {
-                MinBirthday = new DateTime(1999, 1, 1),
-                MaxBirthday = new DateTime(1980, 1, 1),
-                LastName = "Donnelly"
+                MinBirthday = new DateTime(1999, 1, 1).ToUniversalTime(),
+                MaxBirthday = new DateTime(1960, 1, 1).ToUniversalTime(),
+                LastName = "Kutch"
             };
 
             // Act
