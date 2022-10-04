@@ -24,26 +24,7 @@ namespace ExportTool
                 {
                     using (CsvWriter writer = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
                     {
-                        writer.WriteField(nameof(Client.Name));
-                        writer.WriteField(nameof(Client.LastName));
-                        writer.WriteField(nameof(Client.PhoneNumber));
-                        writer.WriteField(nameof(Client.Bonus));
-                        writer.WriteField(nameof(Client.Birthday));
-                        writer.WriteField(nameof(Client.PassportId));
-                        
-                        writer.NextRecord();
-
-                        foreach (var client in clients)
-                        {
-                            writer.WriteField(client.Name);
-                            writer.WriteField(client.LastName);
-                            writer.WriteField(client.PhoneNumber);
-                            writer.WriteField(client.Bonus);
-                            writer.WriteField(client.Birthday);
-                            writer.WriteField(client.PassportId);
-
-                            writer.NextRecord();
-                        }
+                        writer.WriteRecords(clients.AsEnumerable());
                        
                         writer.Flush();
                     }
