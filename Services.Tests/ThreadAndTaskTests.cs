@@ -124,7 +124,7 @@ namespace Services.Tests
         }
 
         [Fact]
-        public void CashDispenserService()
+        public void CashDispenserServicePositivTest()
         {
             // Arrange
             var cashdispencer = new CashDispenserService();
