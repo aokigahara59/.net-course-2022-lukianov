@@ -123,5 +123,20 @@ namespace Services.Tests
             // Assert
         }
 
+        [Fact]
+        public void CashDispenserService()
+        {
+            // Arrange
+            var cashdispencer = new CashDispenserService();
+            var clientService = new ClientService();
+
+            // Act
+            var clietns = clientService.GetClients(new ClientFilter { Limit = 15 });
+
+            clietns.ForEach(x => cashdispencer.CashOut(x));
+
+            Thread.Sleep(30000);
+        }
+
     }
 }
