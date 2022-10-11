@@ -102,5 +102,27 @@ namespace Services.Tests
             
         }
 
+
+        [Fact]
+        public void RateUpdaterPositivTest()
+        {
+            // Arrange
+            var cancellationSource = new CancellationTokenSource();
+            var cancelToken = cancellationSource.Token;
+
+            var rateUpdater = new RateUpdater();
+
+
+            // Act
+            Task task = rateUpdater.Start(cancelToken);
+
+            task.Wait(20000);
+            cancellationSource.Cancel();
+
+
+            // Assert
+            Assert.True(task.IsCompleted);
+        }
+
     }
 }
