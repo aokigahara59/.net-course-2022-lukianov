@@ -121,7 +121,6 @@ namespace Services.Tests
 
 
             // Assert
-            Assert.True(task.IsCompleted);
         }
 
     }

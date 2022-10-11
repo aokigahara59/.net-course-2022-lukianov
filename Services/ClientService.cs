@@ -43,7 +43,41 @@ namespace Services
             };
         }
 
-        
+        public List<Account> GetClientAccounts(Client client)
+        {
+            var clientId = _dbContext.Clients.FirstOrDefault(x => x.Name == client.Name
+                                                                       && x.LastName == client.LastName
+                                                                       && x.PhoneNumber == client.PhoneNumber).Id;
+
+            var accountsDb = _dbContext.Accounts.Where(x => x.ClientId == clientId).ToList();
+
+            var accountList = new List<Account>();
+
+            foreach (var accountDb in accountsDb)
+            {
+                accountList.Add(new Account
+                {
+                    Amount = accountDb.Amount,
+                    Currency = new Currency{ Name = accountDb.CurrencyName}
+                });
+            }
+
+            return accountList;
+        }
+
+        public void UpdateAccount(Client client, Account oldAccount, Account newAccount)
+        {
+            var clientId = _dbContext.Clients.FirstOrDefault(x => x.Name == client.Name
+                                                                  && x.LastName == client.LastName
+                                                                  && x.PhoneNumber == client.PhoneNumber).Id;
+
+            AccountDb account = _dbContext.Accounts.FirstOrDefault(x => x.ClientId == clientId 
+                                                                        && x.CurrencyName == oldAccount.Currency.Name);
+
+            _dbContext.Accounts.Update(account).Entity.Amount = newAccount.Amount;
+            _dbContext.SaveChanges();
+
+        }
 
         public Client GetClient(Guid id)
         {

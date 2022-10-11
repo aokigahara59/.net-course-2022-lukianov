@@ -1,4 +1,5 @@
-﻿using Services.Filters;
+﻿using Models;
+using Services.Filters;
 
 namespace Services
 {
@@ -16,7 +17,12 @@ namespace Services
                 {
                     foreach (var client in clients)
                     {
-                        // TODO: client update account
+                        var accounts = clientService.GetClientAccounts(client);
+
+                        foreach (var account in accounts)
+                        {
+                            clientService.UpdateAccount(client, account, new Account{Amount = account.Amount + 100});    
+                        }
                     }
 
                     Task.Delay(5000);
