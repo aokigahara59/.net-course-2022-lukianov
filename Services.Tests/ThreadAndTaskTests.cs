@@ -102,5 +102,41 @@ namespace Services.Tests
             
         }
 
+
+        [Fact]
+        public void RateUpdaterPositivTest()
+        {
+            // Arrange
+            var cancellationSource = new CancellationTokenSource();
+            var cancelToken = cancellationSource.Token;
+
+            var rateUpdater = new RateUpdater();
+
+
+            // Act
+            Task task = rateUpdater.Start(cancelToken);
+
+            task.Wait(20000);
+            cancellationSource.Cancel();
+
+
+            // Assert
+        }
+
+        [Fact]
+        public void CashDispenserServicePositivTest()
+        {
+            // Arrange
+            var cashdispencer = new CashDispenserService();
+            var clientService = new ClientService();
+
+            // Act
+            var clietns = clientService.GetClients(new ClientFilter { Limit = 15 });
+
+            clietns.ForEach(x => cashdispencer.CashOut(x));
+
+            Thread.Sleep(30000);
+        }
+
     }
 }
