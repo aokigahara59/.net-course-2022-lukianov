@@ -80,8 +80,6 @@ namespace Services.Tests
 
             });
 
-            exportThread.Start();
-
             Thread importThread = new Thread(() =>
             {
                 ExportService importService = new ExportService();
@@ -89,9 +87,15 @@ namespace Services.Tests
 
                 var importedClients = importService.ImportClients(directory, fileForImport);
 
-                importedClients.ForEach(x => clientServiceImport.AddClient(x));
-                
+                foreach (var client in importedClients)
+                {
+                    clientServiceImport.AddClient(client);
+                    Thread.Sleep(200);
+                }
+
             });
+
+            exportThread.Start();
             importThread.Start();
 
             Thread.Sleep(20000);
