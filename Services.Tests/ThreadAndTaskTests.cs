@@ -56,26 +56,26 @@ namespace Services.Tests
         public void ParallelImportExportClientsFromDb()
         {
             // Arrange
-            var exportService = new ExportService();
+            ExportService exportService = new ExportService();
             var clientService = new ClientService();
             var dataGenerator = new TestDataGenerator();
 
             string directory = Path.Combine("F:", "Курсы", ".net-course-2022-lukianov", "Tools", "Data");
+
             string fileForImport = "clientsToImport.csv";
             string fileFromExport = "exportedClients.csv";
-
-           
 
 
             // Act
             var clientsForExport = clientService.GetClients(new ClientFilter { Limit = 10 });
 
             var clientsForImport = dataGenerator.GenerateTestClientsList(10);
+
             exportService.ExportClientData(clientsForImport, directory, fileForImport);
 
             Thread exportThread = new Thread(() =>
             {
-
+                ExportService exportService = new ExportService();
                 exportService.ExportClientData(clientsForExport, directory, fileFromExport);
 
             });
@@ -84,10 +84,12 @@ namespace Services.Tests
 
             Thread importThread = new Thread(() =>
             {
+                ExportService importService = new ExportService();
+                var clientServiceImport = new ClientService();
 
-                var importedClients = exportService.ImportClients(directory, fileForImport);
+                var importedClients = importService.ImportClients(directory, fileForImport);
 
-                importedClients.ForEach(x => clientService.AddClient(x));
+                importedClients.ForEach(x => clientServiceImport.AddClient(x));
                 
             });
             importThread.Start();
@@ -96,8 +98,10 @@ namespace Services.Tests
 
             var clientsFromDb = clientService.GetClients(new ClientFilter());
 
+
             // Assert
             Assert.Equal(clientsForExport, exportService.ImportClients(directory, fileFromExport));
+
             Assert.Multiple( () => exportService.ImportClients(directory, fileForImport).ForEach(x => clientsFromDb.Contains(x)) );
             
         }
