@@ -1,4 +1,5 @@
-﻿using ExportTool;
+﻿using System.ComponentModel;
+using ExportTool;
 using Models;
 using Services.Filters;
 using Xunit;
@@ -51,6 +52,60 @@ namespace Services.Tests
             Assert.Equal(2000, account.Amount);
         }
 
+        [Fact]
+        public async void AsyncTest()
+        {
+            // Arrange
+            var clientService = new ClientService();
+            var extraClientService = new ClientService();
+
+
+            var client = new Client
+            {
+                Name = "John",
+                LastName = "Loye",
+                PhoneNumber = "+37377775544",
+                Bonus = 0,
+                Birthday = new DateTime(2002, 12, 15).ToUniversalTime(),
+                PassportId = 225546
+            };
+
+
+            // Act
+            ThreadPool.SetMaxThreads(7, 7);
+            
+            ThreadPool.GetMaxThreads(out var worker, out var completions);
+
+            _testOutputHelper.WriteLine("Max threads: " + worker);
+
+
+            async Task CreateTask()
+            {
+                await Task.Run(() =>
+                {
+                    var clients = clientService.GetClients(new ClientFilter());
+                    Task.Delay(1000).Wait();
+                });
+            }
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                await CreateTask();
+                ThreadPool.GetAvailableThreads(out var currentThreads, out _);
+                
+                _testOutputHelper.WriteLine("Current threads: " + currentThreads);
+            }
+
+            await Task.Run(async () =>
+            {
+                 await extraClientService.AddClient(client);
+            });
+
+
+            // Assert
+            Assert.Contains(client, extraClientService.GetClients(new ClientFilter()));
+        }
 
         [Fact]
         public void ParallelImportExportClientsFromDb()
