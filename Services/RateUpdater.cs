@@ -8,7 +8,7 @@ namespace Services
 
         public Task Start(CancellationToken cancelToken)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
                 var clientService = new ClientService();
                 var clients = clientService.GetClients(new ClientFilter { Limit = 20});
@@ -21,7 +21,7 @@ namespace Services
 
                         foreach (var account in accounts)
                         {
-                            clientService.UpdateAccount(client, account, new Account{Amount = account.Amount + 100});    
+                            await clientService.UpdateAccount(client, account, new Account { Amount = account.Amount + 100 });    
                         }
                     }
 

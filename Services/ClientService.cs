@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using Services.Exeptions;
 using Services.Filters;
 using ModelsDb;
@@ -65,17 +66,18 @@ namespace Services
             return accountList;
         }
 
-        public void UpdateAccount(Client client, Account oldAccount, Account newAccount)
+        public async Task UpdateAccount(Client client, Account oldAccount, Account newAccount)
         {
-            var clientId = _dbContext.Clients.FirstOrDefault(x => x.Name == client.Name
+            var clientDb = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Name == client.Name
                                                                   && x.LastName == client.LastName
-                                                                  && x.PhoneNumber == client.PhoneNumber).Id;
+                                                                  && x.PhoneNumber == client.PhoneNumber);
+            var clientId = clientDb.Id;
 
-            AccountDb account = _dbContext.Accounts.FirstOrDefault(x => x.ClientId == clientId 
+            var account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.ClientId == clientId 
                                                                         && x.CurrencyName == oldAccount.Currency.Name);
 
             _dbContext.Accounts.Update(account).Entity.Amount = newAccount.Amount;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
         }
 
@@ -93,7 +95,7 @@ namespace Services
             return _dbContext.Clients.FirstOrDefault(x => x.Id == id);
         }
 
-        public void AddClient(Client client)
+        public async Task AddClient(Client client)
         {
             if (client.Birthday > new DateTime(2004, 1, 1))
             {
@@ -104,9 +106,9 @@ namespace Services
 
             ClientDb clientDb = ConvertClientToClientDb(client);
 
-            _dbContext.Clients.Add(clientDb);
+            var addClientTask = _dbContext.Clients.AddAsync(clientDb);
 
-            _dbContext.Accounts.Add(new AccountDb
+            var addAccountTask = _dbContext.Accounts.AddAsync(new AccountDb
             {
                 AccountId = new Guid(),
                 Amount = 0,
@@ -114,16 +116,19 @@ namespace Services
                 CurrencyName = "USD"
             });
 
-            _dbContext.SaveChanges();
+            await addClientTask;
+            await addAccountTask;
+
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void AddAccount(Guid clientId, Account account)
+        public async Task AddAccount(Guid clientId, Account account)
         {
             ClientDb client = GetClientDb(clientId);
 
             if (client == null) throw new NullReferenceException("Нет такого клиента!");
 
-            _dbContext.Accounts.Add(new AccountDb
+            await _dbContext.Accounts.AddAsync(new AccountDb
             {
                 AccountId = new Guid(),
                 Amount = account.Amount,
@@ -131,55 +136,55 @@ namespace Services
                 Client = client
             });
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateClient(Guid id, Client client)
+        public async Task UpdateClient(Guid id, Client client)
         {
             ClientDb oldClient = GetClientDb(id);
 
             if (client.Name != null)
             {
                 _dbContext.Clients.Update(oldClient).Entity.Name = client.Name;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (client.LastName != null)
             {
                 _dbContext.Clients.Update(oldClient).Entity.LastName = client.LastName;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (client.Birthday != default(DateTime))
             {
                 _dbContext.Clients.Update(oldClient).Entity.Birthday = client.Birthday.ToUniversalTime();
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (client.PassportId != 0)
             {
                 _dbContext.Clients.Update(oldClient).Entity.PassportId = client.PassportId;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (client.PhoneNumber != null)
             {
                 _dbContext.Clients.Update(oldClient).Entity.PhoneNumber = client.PhoneNumber;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
         }
 
-        public void DeleteClient(Guid id)
+        public async Task DeleteClient(Guid id)
         {
             _dbContext.Clients.Remove(GetClientDb(id));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void DeleteAccount(Guid id)
+        public async Task DeleteAccount(Guid id)
         {
-            _dbContext.Accounts.Remove(_dbContext.Accounts.FirstOrDefault(x => x.AccountId == id));
-            _dbContext.SaveChanges();
+            _dbContext.Accounts.Remove(await _dbContext.Accounts.FirstOrDefaultAsync(x => x.AccountId == id));
+            await _dbContext.SaveChangesAsync();
         }
 
         public List<Client> GetClients(ClientFilter filter)
