@@ -60,7 +60,7 @@ namespace Services
             return employeeDb;
         }
 
-        public void AddEmployee(Employee employee)
+        public async Task AddEmployee(Employee employee)
         {
             if (employee.Birthday > new DateTime(2004, 1, 1))
             {
@@ -69,56 +69,56 @@ namespace Services
 
             if (employee.PassportId == 0) throw new ArgumentNullException("employee сотрудника нет паспортных данных!");
 
-            _dbContext.Employees.Add(ConvertEmployeeToEmployeeDb(employee));
-            _dbContext.SaveChanges();
+            await _dbContext.Employees.AddAsync(ConvertEmployeeToEmployeeDb(employee));
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateEmployee(Guid id, Employee employee)
+        public async Task UpdateEmployee(Guid id, Employee employee)
         {
             EmployeeDb oldEmployee = ConvertEmployeeToEmployeeDb(GetEmployee(id));
 
             if (employee.Name != null)
             {
                 _dbContext.Employees.Update(oldEmployee).Entity.Name = employee.Name;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (employee.LastName != null)
             {
                _dbContext.Employees.Update(oldEmployee).Entity.LastName = employee.LastName;
-               _dbContext.SaveChanges();
+               await _dbContext.SaveChangesAsync();
             }
 
             if (employee.Birthday != default(DateTime))
             {
                 _dbContext.Employees.Update(oldEmployee).Entity.Birthday = employee.Birthday;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (employee.PassportId != 0)
             {
                 _dbContext.Employees.Update(oldEmployee).Entity.PassportId = employee.PassportId;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (employee.Salary != 0)
             {
                 _dbContext.Employees.Update(oldEmployee).Entity.Salary = employee.Salary;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
             if (employee.Contract != null)
             {
                 _dbContext.Employees.Update(oldEmployee).Entity.Contract = employee.Contract;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
 
         }
 
-        public void DeleteEmployee(Guid id)
+        public async Task DeleteEmployee(Guid id)
         {
             _dbContext.Employees.Remove(GetEmployeeDb(id));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
 
