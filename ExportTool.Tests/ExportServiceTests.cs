@@ -8,7 +8,7 @@ namespace ExportTool.Tests
     {
 
         [Fact]
-        public void ImportExportPositiveTest()
+        public async void ImportExportPositiveTest()
         {
             // Arrange
             TestDataGenerator dataGenerator = new TestDataGenerator();
@@ -21,13 +21,13 @@ namespace ExportTool.Tests
             // Act
             var generatedClients = dataGenerator.GenerateTestClientsList(20);
 
-            exportService.ExportClientData(generatedClients, directory, fileName);
+            await exportService.ExportClientData(generatedClients, directory, fileName);
 
             var importedClients = exportService.ImportClients(directory, fileName);
 
             foreach (var client in importedClients)
             {
-                clientService.AddClient(client);
+                await clientService.AddClient(client);
             }
 
             var clientsFromDb = clientService.GetClients(new ClientFilter());

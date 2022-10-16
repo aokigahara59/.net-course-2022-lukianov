@@ -188,7 +188,7 @@ namespace Services.Tests
             // Act
             var clietns = clientService.GetClients(new ClientFilter { Limit = 15 });
 
-            clietns.ForEach(x => cashdispencer.CashOut(x));
+            clietns.ForEach(async x => await cashdispencer.CashOut(x));
 
             Thread.Sleep(30000);
         }

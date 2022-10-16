@@ -7,7 +7,7 @@ namespace ExportTool
     public class ExportService
     {
 
-        public void ExportClientData(List<Client> clients, string directory, string fileName)
+        public async Task ExportClientData(List<Client> clients, string directory, string fileName)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(directory);
 
@@ -18,15 +18,19 @@ namespace ExportTool
 
             string fullPath = Path.Combine(directoryInfo.FullName, fileName);
 
-            using (FileStream fileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
+            await using (FileStream fileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
             {
-                using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                await using (StreamWriter streamWriter = new StreamWriter(fileStream))
                 {
-                    using (CsvWriter writer = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
+                    await using (CsvWriter writer = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
                     {
-                        writer.WriteRecords(clients.AsEnumerable());
-                       
-                        writer.Flush();
+                        await Task.Run(() =>
+                        {
+                            writer.WriteRecords(clients.AsEnumerable());
+
+                            writer.Flush();
+                        });
+                        
                     }
                 }
             }
