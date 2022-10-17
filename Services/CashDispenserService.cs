@@ -4,9 +4,9 @@ namespace Services
 {
     public class CashDispenserService
     {
-        public async Task CashOut(Client client)
+        public void CashOut(Client client)
         {
-            await Task.Run(async () =>
+            Task.Run(() =>
             {
                 var clientService = new ClientService();
 
@@ -14,9 +14,9 @@ namespace Services
 
                 for (int i = 1; i <= 10; i++)
                 {
-                    await clientService.UpdateAccount(client, account, new Account{Amount = account.Amount - 10});
+                    clientService.UpdateAccount(client, account, new Account{Amount = account.Amount - 10});
 
-                    await Task.Delay(1000);
+                    Task.Delay(1000);
                 }
 
             });

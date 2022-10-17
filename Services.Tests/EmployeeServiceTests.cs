@@ -19,7 +19,7 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.ThrowsAsync<AgeLimitException>(() => employeeService.AddEmployee(employee));
+            Assert.ThrowsAsync<AgeLimitException>(() => employeeService.AddEmployeeAsync(employee));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.ThrowsAsync<ArgumentNullException>(() => employeeService.AddEmployee(employee));
+            Assert.ThrowsAsync<ArgumentNullException>(() => employeeService.AddEmployeeAsync(employee));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Services.Tests
             };
 
             // Act
-            await employeeService.AddEmployee(employee);
+            await employeeService.AddEmployeeAsync(employee);
 
             // Assert
             Assert.Contains(employee, employeeService.GetEmployees(new EmployeeFilter()));
@@ -81,7 +81,7 @@ namespace Services.Tests
             var employeeService = new EmployeeService();
 
             // Act
-            await employeeService.DeleteEmployee(id);
+            await employeeService.DeleteEmployeeAsync(id);
 
             // Assert
             Assert.Throws<NullReferenceException>(() => employeeService.GetEmployee(id));
@@ -103,7 +103,7 @@ namespace Services.Tests
                 Bonus = 5,
             };
 
-            await employeeService.UpdateEmployee(id, newEmployeeData);
+            await employeeService.UpdateEmployeeAsync(id, newEmployeeData);
 
             // Assert
             Assert.Multiple(() => oldEmployee.Name.Equals(newEmployeeData.Name),
@@ -132,7 +132,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    await employeeService.AddEmployee(employee);
+                    await employeeService.AddEmployeeAsync(employee);
                 }
                 catch (AgeLimitException ex)
                 {

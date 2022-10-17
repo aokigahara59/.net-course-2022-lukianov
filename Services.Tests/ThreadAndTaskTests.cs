@@ -53,7 +53,7 @@ namespace Services.Tests
         }
 
         [Fact]
-        public async void AsyncTest()
+        public async void AsyncThreadPoolUseTest()
         {
             // Arrange
             var clientService = new ClientService();
@@ -99,7 +99,7 @@ namespace Services.Tests
 
             await Task.Run(async () =>
             {
-                 await extraClientService.AddClient(client);
+                 await extraClientService.AddClientAsync(client);
             });
 
 
@@ -142,7 +142,7 @@ namespace Services.Tests
 
                 var importedClients = exportService.ImportClients(directory, fileForImport);
 
-                importedClients.ForEach(x => clientService.AddClient(x));
+                importedClients.ForEach(x => clientService.AddClientAsync(x));
                 
             });
             importThread.Start();
@@ -188,7 +188,7 @@ namespace Services.Tests
             // Act
             var clietns = clientService.GetClients(new ClientFilter { Limit = 15 });
 
-            clietns.ForEach(async x => await cashdispencer.CashOut(x));
+            clietns.ForEach(x => cashdispencer.CashOut(x));
 
             Thread.Sleep(30000);
         }

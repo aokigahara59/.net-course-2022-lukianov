@@ -27,7 +27,7 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            await Assert.ThrowsAsync<AgeLimitException>(() => clientService.AddClient(client));
+            await Assert.ThrowsAsync<AgeLimitException>(() => clientService.AddClientAsync(client));
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => clientService.AddClient(client));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => clientService.AddClientAsync(client));
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Services.Tests
             };
 
             // Act
-            await clientService.AddClient(client);
+            await clientService.AddClientAsync(client);
 
             // Assert
             Assert.Contains(client, clientService.GetClients(new ClientFilter()));
@@ -89,7 +89,7 @@ namespace Services.Tests
             var clientService = new ClientService();
 
             // Act
-            await clientService.DeleteClient(id);
+            await clientService.DeleteClientAsync(id);
 
             // Assert
             Assert.Throws<NullReferenceException>(() => clientService.GetClient(id));
@@ -111,7 +111,7 @@ namespace Services.Tests
                 Bonus = 5,
             };
 
-            await clientService.UpdateClient(id, newClientsData);
+            await clientService.UpdateClientAsync(id, newClientsData);
 
             // Assert
             Assert.Multiple(() => oldClient.Name.Equals(newClientsData.Name),
@@ -142,7 +142,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    await clientService.AddClient(client);
+                    await clientService.AddClientAsync(client);
                 }
                 catch (AgeLimitException ex)
                 {
@@ -178,7 +178,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    await clientService.AddClient(client);
+                    await clientService.AddClientAsync(client);
                 }
                 catch (AgeLimitException ex)
                 {

@@ -60,7 +60,7 @@ namespace Services
             return employeeDb;
         }
 
-        public async Task AddEmployee(Employee employee)
+        public async Task AddEmployeeAsync(Employee employee)
         {
             if (employee.Birthday > new DateTime(2004, 1, 1))
             {
@@ -73,7 +73,7 @@ namespace Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateEmployee(Guid id, Employee employee)
+        public async Task UpdateEmployeeAsync(Guid id, Employee employee)
         {
             EmployeeDb oldEmployee = ConvertEmployeeToEmployeeDb(GetEmployee(id));
 
@@ -115,7 +115,7 @@ namespace Services
 
         }
 
-        public async Task DeleteEmployee(Guid id)
+        public async Task DeleteEmployeeAsync(Guid id)
         {
             _dbContext.Employees.Remove(GetEmployeeDb(id));
             await _dbContext.SaveChangesAsync();

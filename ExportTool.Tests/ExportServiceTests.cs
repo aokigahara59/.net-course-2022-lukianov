@@ -27,7 +27,7 @@ namespace ExportTool.Tests
 
             foreach (var client in importedClients)
             {
-                await clientService.AddClient(client);
+                await clientService.AddClientAsync(client);
             }
 
             var clientsFromDb = clientService.GetClients(new ClientFilter());

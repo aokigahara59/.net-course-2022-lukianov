@@ -66,15 +66,30 @@ namespace Services
             return accountList;
         }
 
-        public async Task UpdateAccount(Client client, Account oldAccount, Account newAccount)
+        public void UpdateAccount(Client client, Account oldAccount, Account newAccount)
+        {
+            var clientId = _dbContext.Clients.FirstOrDefault(x => x.Name == client.Name
+                                                                  && x.LastName == client.LastName
+                                                                  && x.PhoneNumber == client.PhoneNumber).Id;
+            
+
+            var account =  _dbContext.Accounts.FirstOrDefault(x => x.ClientId == clientId 
+                                                                        && x.CurrencyName == oldAccount.Currency.Name);
+
+            _dbContext.Accounts.Update(account).Entity.Amount = newAccount.Amount;
+            _dbContext.SaveChanges();
+
+        }
+
+        public async Task UpdateAccountAsync(Client client, Account oldAccount, Account newAccount)
         {
             var clientDb = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Name == client.Name
-                                                                  && x.LastName == client.LastName
-                                                                  && x.PhoneNumber == client.PhoneNumber);
+                                                                             && x.LastName == client.LastName
+                                                                             && x.PhoneNumber == client.PhoneNumber);
             var clientId = clientDb.Id;
 
-            var account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.ClientId == clientId 
-                                                                        && x.CurrencyName == oldAccount.Currency.Name);
+            var account = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.ClientId == clientId
+                                                                             && x.CurrencyName == oldAccount.Currency.Name);
 
             _dbContext.Accounts.Update(account).Entity.Amount = newAccount.Amount;
             await _dbContext.SaveChangesAsync();
@@ -95,7 +110,7 @@ namespace Services
             return _dbContext.Clients.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task AddClient(Client client)
+        public async Task AddClientAsync(Client client)
         {
             if (client.Birthday > new DateTime(2004, 1, 1))
             {
@@ -122,7 +137,7 @@ namespace Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddAccount(Guid clientId, Account account)
+        public async Task AddAccountAsync(Guid clientId, Account account)
         {
             ClientDb client = GetClientDb(clientId);
 
@@ -139,7 +154,7 @@ namespace Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateClient(Guid id, Client client)
+        public async Task UpdateClientAsync(Guid id, Client client)
         {
             ClientDb oldClient = GetClientDb(id);
 
@@ -175,13 +190,13 @@ namespace Services
 
         }
 
-        public async Task DeleteClient(Guid id)
+        public async Task DeleteClientAsync(Guid id)
         {
             _dbContext.Clients.Remove(GetClientDb(id));
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAccount(Guid id)
+        public async Task DeleteAccountAsync(Guid id)
         {
             _dbContext.Accounts.Remove(await _dbContext.Accounts.FirstOrDefaultAsync(x => x.AccountId == id));
             await _dbContext.SaveChangesAsync();
