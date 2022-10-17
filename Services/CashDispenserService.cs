@@ -4,9 +4,9 @@ namespace Services
 {
     public class CashDispenserService
     {
-        public void CashOut(Client client)
+        public Task CashOut(Client client)
         {
-            Task.Run(() =>
+            return Task.Run(() =>
             {
                 var clientService = new ClientService();
 
