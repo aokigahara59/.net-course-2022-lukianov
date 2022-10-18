@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using CsvHelper;
 using Models;
+using Newtonsoft.Json;
 
 namespace ExportTool
 {
@@ -51,6 +52,50 @@ namespace ExportTool
                     }
                 }
             }
+        }
+
+
+        public Task ExportPersonToJson<T>(T person, string directory, string fileName) where T : Person
+        {
+            return Task.Run(() =>
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(directory);
+
+                if (!directoryInfo.Exists)
+                {
+                    directoryInfo.Create();
+                }
+
+                string fullPath = Path.Combine(directory, fileName);
+
+                string serializedPerson = JsonConvert.SerializeObject(person);
+
+                using (FileStream fileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                    {
+                        streamWriter.Write(serializedPerson);
+                    }
+                }
+            });
+        }
+
+        public Task ImportPersonFromJson<T>(T person, string directory, string fileName) where T : Person
+        {
+            return Task.Run(() =>
+            {
+                string fullPath = Path.Combine(directory, fileName);
+
+                using (FileStream fileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        string serializedPerson = streamReader.ReadToEnd();
+
+                        return JsonConvert.DeserializeObject<T>(serializedPerson);
+                    }
+                }
+            });
         }
 
     }
