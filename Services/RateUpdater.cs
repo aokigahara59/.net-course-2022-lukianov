@@ -21,7 +21,7 @@ namespace Services
 
                         foreach (var account in accounts)
                         {
-                            clientService.UpdateAccount(client, account, new Account{Amount = account.Amount + 100});    
+                            clientService.UpdateAccount(client, account, new Account { Amount = account.Amount + 100 });    
                         }
                     }
 

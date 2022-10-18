@@ -17,7 +17,7 @@ namespace Services.Tests
         }
 
         [Fact]
-        public void AddClientAgeLimitException()
+        public async Task AddClientAgeLimitException()
         {
             // Arrange
             var clientService = new ClientService();
@@ -27,11 +27,11 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.Throws<AgeLimitException>(() => clientService.AddClient(client));
+            await Assert.ThrowsAsync<AgeLimitException>(() => clientService.AddClientAsync(client));
         }
 
         [Fact]
-        public void AddClientArgumentNullException()
+        public async void AddClientArgumentNullException()
         {
             // Arrange
             var clientService = new ClientService();
@@ -41,11 +41,11 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.Throws<ArgumentNullException>(() => clientService.AddClient(client));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => clientService.AddClientAsync(client));
         }
 
         [Fact]
-        public void AddClientPositivTest()
+        public async void AddClientPositivTest()
         {
             // Arrange
             var clientService = new ClientService();
@@ -60,7 +60,7 @@ namespace Services.Tests
             };
 
             // Act
-            clientService.AddClient(client);
+            await clientService.AddClientAsync(client);
 
             // Assert
             Assert.Contains(client, clientService.GetClients(new ClientFilter()));
@@ -82,21 +82,21 @@ namespace Services.Tests
         }
 
         [Fact]
-        public void DeleteClientPositivTest()
+        public async Task DeleteClientPositivTestAsync()
         {
             // Arrange
             Guid id = Guid.Parse("c93666d5-f92d-df9c-b432-f8ecf8fe0744");
             var clientService = new ClientService();
 
             // Act
-            clientService.DeleteClient(id);
+            await clientService.DeleteClientAsync(id);
 
             // Assert
             Assert.Throws<NullReferenceException>(() => clientService.GetClient(id));
         }
 
         [Fact]
-        public void UpdateClientPositivTest()
+        public async void UpdateClientPositivTest()
         {
             // Arrange
             Guid id = Guid.Parse("6e6c9848-15e8-4f91-8b3c-f4e43832f4a2");
@@ -111,7 +111,7 @@ namespace Services.Tests
                 Bonus = 5,
             };
 
-            clientService.UpdateClient(id, newClientsData);
+            await clientService.UpdateClientAsync(id, newClientsData);
 
             // Assert
             Assert.Multiple(() => oldClient.Name.Equals(newClientsData.Name),
@@ -121,7 +121,7 @@ namespace Services.Tests
 
 
         [Fact]
-        public void GetClientsByFilterTest()
+        public async void GetClientsByFilterTest()
         {
             // Arrange
             var clientService = new ClientService();
@@ -142,7 +142,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    clientService.AddClient(client);
+                    await clientService.AddClientAsync(client);
                 }
                 catch (AgeLimitException ex)
                 {
@@ -165,7 +165,7 @@ namespace Services.Tests
 
 
         [Fact]
-        public void AgeClientTests()
+        public async void AgeClientTests()
         {
             // Arrange
             var clientService = new ClientService();
@@ -178,7 +178,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    clientService.AddClient(client);
+                    await clientService.AddClientAsync(client);
                 }
                 catch (AgeLimitException ex)
                 {

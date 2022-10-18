@@ -19,7 +19,7 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.Throws<AgeLimitException>(() => employeeService.AddEmployee(employee));
+            Assert.ThrowsAsync<AgeLimitException>(() => employeeService.AddEmployeeAsync(employee));
         }
 
         [Fact]
@@ -33,11 +33,11 @@ namespace Services.Tests
             };
 
             // Act and Assert
-            Assert.Throws<ArgumentNullException>(() => employeeService.AddEmployee(employee));
+            Assert.ThrowsAsync<ArgumentNullException>(() => employeeService.AddEmployeeAsync(employee));
         }
 
         [Fact]
-        public void AddEmployeePositivTest()
+        public async void AddEmployeePositivTest()
         {
             // Arrange
             var employeeService = new EmployeeService();
@@ -53,7 +53,7 @@ namespace Services.Tests
             };
 
             // Act
-            employeeService.AddEmployee(employee);
+            await employeeService.AddEmployeeAsync(employee);
 
             // Assert
             Assert.Contains(employee, employeeService.GetEmployees(new EmployeeFilter()));
@@ -74,21 +74,21 @@ namespace Services.Tests
         }
 
         [Fact]
-        public void DeleteEmployeePositivTest()
+        public async void DeleteEmployeePositivTest()
         {
             // Arrange
             Guid id = Guid.Parse("c477f923-3a2f-473c-8d40-e93736b36f6c");
             var employeeService = new EmployeeService();
 
             // Act
-            employeeService.DeleteEmployee(id);
+            await employeeService.DeleteEmployeeAsync(id);
 
             // Assert
             Assert.Throws<NullReferenceException>(() => employeeService.GetEmployee(id));
         }
 
         [Fact]
-        public void UpdateEmployeePositivTest()
+        public async void UpdateEmployeePositivTest()
         {
             // Arrange
             Guid id = Guid.Parse("67e63271-06cc-9d5f-2026-55521a86c012");
@@ -103,7 +103,7 @@ namespace Services.Tests
                 Bonus = 5,
             };
 
-            employeeService.UpdateEmployee(id, newEmployeeData);
+            await employeeService.UpdateEmployeeAsync(id, newEmployeeData);
 
             // Assert
             Assert.Multiple(() => oldEmployee.Name.Equals(newEmployeeData.Name),
@@ -113,7 +113,7 @@ namespace Services.Tests
 
 
         [Fact]
-        public void GetEmployeesByFilterTest()
+        public async void GetEmployeesByFilterTest()
         {
             // Arrange
             var employeeService = new EmployeeService();
@@ -132,7 +132,7 @@ namespace Services.Tests
             {
                 try
                 {
-                    employeeService.AddEmployee(employee);
+                    await employeeService.AddEmployeeAsync(employee);
                 }
                 catch (AgeLimitException ex)
                 {
