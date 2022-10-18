@@ -108,7 +108,7 @@ namespace Services.Tests
         }
 
         [Fact]
-        public void ParallelImportExportClientsFromDb()
+        public async void ParallelImportExportClientsFromDb()
         {
             // Arrange
             var exportService = new ExportService();
@@ -126,7 +126,7 @@ namespace Services.Tests
             var clientsForExport = clientService.GetClients(new ClientFilter { Limit = 10 });
 
             var clientsForImport = dataGenerator.GenerateTestClientsList(10);
-            exportService.ExportClientData(clientsForImport, directory, fileForImport);
+            await exportService.ExportClientData(clientsForImport, directory, fileForImport);
 
             Thread exportThread = new Thread(() =>
             {
