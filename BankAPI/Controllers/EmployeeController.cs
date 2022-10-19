@@ -5,39 +5,39 @@ using Services;
 namespace BankAPI.Controllers
 {
     [ApiController]
-    [Route("EmployeeServiceController")]
-    public class EmployeeServiceController
+    [Route("EmployeeController")]
+    public class EmployeeController
     {
         private EmployeeService _employeeService;
 
-        public EmployeeServiceController()
+        public EmployeeController()
         {
             _employeeService = new EmployeeService();
         }
 
 
-        [HttpPost(Name = "AddEmployee")]
+        [HttpPost]
         public async void AddEmployee(Employee employee)
         {
             await _employeeService.AddEmployeeAsync(employee);
         }
 
 
-        [HttpGet(Name = "GetEmployee")]
+        [HttpGet]
         public Employee GetEmployee(Guid id)
         {
             return _employeeService.GetEmployee(id);
         }
 
 
-        [HttpPut(Name = "UpdateEmployee")]
+        [HttpPut]
         public async void UpdateEmployee(Guid id, Employee employee)
         {
             await _employeeService.UpdateEmployeeAsync(id, employee);
         }
 
 
-        [HttpDelete(Name = "DeleteEmployee")]
+        [HttpDelete]
         public async void DeleteEmployee(Guid id)
         {
             await _employeeService.DeleteEmployeeAsync(id);
