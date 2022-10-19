@@ -55,9 +55,9 @@ namespace ExportTool
         }
 
 
-        public Task ExportPersonToJson<T>(T person, string directory, string fileName) where T : Person
+        public async Task ExportPersonToJson<T>(T person, string directory, string fileName) where T : Person
         {
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(directory);
 
@@ -80,9 +80,9 @@ namespace ExportTool
             });
         }
 
-        public Task ImportPersonFromJson<T>(T person, string directory, string fileName) where T : Person
+        public async Task<T> ImportPersonFromJson<T>(string directory, string fileName) where T : Person
         {
-            return Task.Run(() =>
+            Task<T> result = Task.Run(() =>
             {
                 string fullPath = Path.Combine(directory, fileName);
 
@@ -96,6 +96,10 @@ namespace ExportTool
                     }
                 }
             });
+
+            await result;
+            return result.Result;
+
         }
 
     }
