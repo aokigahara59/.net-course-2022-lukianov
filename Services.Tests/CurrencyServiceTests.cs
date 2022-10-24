@@ -10,13 +10,12 @@ namespace Services.Tests
         public async void CurrencyExchangePositivTest()
         {
             // Arrange
-            CurrencyService currencyService = new CurrencyService();
+            CurrencyService currencyService = new CurrencyService("fn4BrxqVaPu2YkrswXvad2Cug5Pdan");
 
             Currency fromCurrency = new Currency { Name = "USD" };
             Currency toCurrency = new Currency { Name = "RUB" };
 
             // Act
-            currencyService.Authorize("fn4BrxqVaPu2YkrswXvad2Cug5Pdan");
 
             var response = await currencyService.ExchangeMoneyAsync(fromCurrency, toCurrency, 500);
 

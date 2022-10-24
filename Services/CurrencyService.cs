@@ -8,7 +8,7 @@ namespace Services
 
         private string _token;
 
-        public void Authorize(string token)
+        public CurrencyService(string token)
         {
             _token = token;
         }
