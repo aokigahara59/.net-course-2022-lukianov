@@ -1,4 +1,5 @@
-﻿using Services;
+﻿using Models;
+using Services;
 using Services.Filters;
 using Xunit;
 
@@ -34,6 +35,35 @@ namespace ExportTool.Tests
 
             // Assert
             Assert.Multiple(() => generatedClients.ForEach(x => clientsFromDb.Contains(x)));
+
+        }
+
+
+        [Fact]
+        public async void JsonSerializationsTest()
+        {
+            // Arrange
+            var exportService = new ExportService();
+
+            var client = new Client
+            {
+                Name = "Stepan",
+                LastName = "Chibby",
+                PhoneNumber = "+373(777)7-14-15",
+                Bonus = 3
+            };
+
+            string directory = Path.Combine("F:", "Курсы", ".net-course-2022-lukianov", "Tools", "Data");
+            string fileName = "jsonclient.json";
+
+            // Act
+
+            await exportService.ExportPersonToJson<Client>(client, directory, fileName);
+
+            var importedClient = await exportService.ImportPersonFromJson<Client>(directory, fileName);
+
+            // Assert
+            Assert.Equal(client, importedClient);
 
         }
 
