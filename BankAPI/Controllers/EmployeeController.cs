@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services;
+using Services.Exeptions;
 
 namespace BankAPI.Controllers
 {
@@ -17,30 +18,65 @@ namespace BankAPI.Controllers
 
 
         [HttpPost]
-        public async void AddEmployee(Employee employee)
+        public async Task<ActionResult> AddEmployee(Employee employee)
         {
-            await _employeeService.AddEmployeeAsync(employee);
+            try
+            {
+                await _employeeService.AddEmployeeAsync(employee);
+                return new OkResult();
+            }
+            catch (AgeLimitException ex)
+            {
+                return new ForbidResult();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return new ForbidResult();
+            }
         }
 
 
         [HttpGet]
-        public Employee GetEmployee(Guid id)
+        public ActionResult<Employee> GetEmployee(Guid id)
         {
-            return _employeeService.GetEmployee(id);
+            try
+            {
+                return _employeeService.GetEmployee(id);
+            }
+            catch (NullReferenceException ex)
+            {
+                return new NotFoundResult();
+            }
         }
 
 
         [HttpPut]
-        public async void UpdateEmployee(Guid id, Employee employee)
+        public async Task<ActionResult> UpdateEmployee(Guid id, Employee employee)
         {
-            await _employeeService.UpdateEmployeeAsync(id, employee);
+            try
+            {
+                await _employeeService.UpdateEmployeeAsync(id, employee);
+                return new OkResult();
+            }
+            catch (NullReferenceException ex)
+            {
+                return new NotFoundResult();
+            }
         }
 
 
         [HttpDelete]
-        public async void DeleteEmployee(Guid id)
+        public async Task<ActionResult> DeleteEmployee(Guid id)
         {
-            await _employeeService.DeleteEmployeeAsync(id);
+            try
+            {
+                await _employeeService.DeleteEmployeeAsync(id);
+                return new OkResult();
+            }
+            catch (NullReferenceException ex)
+            {
+                return new NotFoundResult();
+            }
         }
     }
 }
